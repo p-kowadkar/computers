@@ -1,0 +1,31 @@
+repos:
+  - repo: local
+    hooks:
+      - id: check-secrets
+        name: Block API keys and tokens
+        entry: uv run python scripts/check_secrets.py
+        language: system
+        pass_filenames: true
+      - id: ruff
+        name: ruff check
+        entry: uv run ruff check
+        language: system
+        types: [python]
+      - id: schema-check
+        name: Schema lock and version bumps
+        entry: uv run computers schema check
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: thresholds-check
+        name: Thresholds match their decision records
+        entry: uv run computers thresholds check
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: fast-tests
+        name: Fast test suite
+        entry: uv run pytest -q -x
+        language: system
+        pass_filenames: false
+        always_run: true

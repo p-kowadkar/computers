@@ -1,0 +1,50 @@
+[project]
+name = "computers"
+version = "0.1.0"
+description = "A crew of agents that patrols a century of Harvard glass plates for stars that faded or flared."
+readme = "README.md"
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [
+    { email = "pk.kowadkar@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.5",
+    "pyarrow>=26.0.1",
+    "requests>=2.34.2",
+]
+
+[project.scripts]
+computers = "computers.cli:main"
+
+[dependency-groups]
+dev = [
+    "hypothesis>=6.100",
+    "pre-commit>=4.0",
+    "pytest>=8.0",
+    "ruff>=0.8",
+]
+spike = [
+    "astropy>=8.0.3",
+    "astroquery>=0.4.11",
+    "daschlab==1.1.0",
+    "matplotlib>=3.11.2",
+    "numpy>=2.5.5",
+    "requests>=2.34.2",
+]
+
+[build-system]
+requires = ["uv_build>=0.13.7,<0.14.0"]
+build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -m 'not network'"
+markers = [
+    "network: needs the DASCH API or other network access (excluded by default; run with -m network)",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

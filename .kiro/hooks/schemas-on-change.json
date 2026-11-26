@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Check schemas after a table change",
+      "trigger": "PostFileSave",
+      "description": "After a save to schemas.py or the data-contracts steering file, ask the agent to run the schema tests and say which table needs a version bump. Enforced for real by tests and pre-commit.",
+      "matcher": "src/computers/data/schemas\\.py$|\\.kiro/steering/data-contracts\\.md$",
+      "action": {
+        "type": "agent",
+        "prompt": "schemas.py or the data-contracts steering file was just saved. Run `uv run pytest tests/unit/test_schemas.py -q` and `uv run computers schema check`. If a table's columns changed, say which table, confirm its version was raised, and regenerate with `uv run computers schema lock` and `uv run computers schema docs`. Do not regenerate the lock to hide a missing version bump."
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.hypothesis/
+dist/
+*.egg-info/
+
+# Secrets (keys come from environment variables only)
+.env
+.env.*
+*.pem
+secrets.*
+
+# Data: raw files and tables stay local or on S3. Manifests are committed.
+data/raw/
+data/silver/
+data/gold/
+data/*
+!data/manifests/
+!data/.gitkeep
+
+# Local tool state
+.DS_Store
+.ipynb_checkpoints/
+daschlab-sessions/
+mlruns/
+wandb/

@@ -1,0 +1,52 @@
+{
+  "candidates": {
+    "fingerprint": "269756f587bb900aaec33d95f7c72b80c6e3b933c3586715c29bc4e95b6fc091",
+    "structure": "90d228c4b8dd57e5917a5a4e219f49947c037c053d0dbd89d373a917c7a4e1ac",
+    "version": 1
+  },
+  "cutouts": {
+    "fingerprint": "8c3fe922112f6f2b7e685b1470223e588accfa9e4ca36d4b768280e10be4cd9f",
+    "structure": "eb12442890f0dd03a8bba67b034bf6cbdc24c3be228ee3590a6124363878795e",
+    "version": 1
+  },
+  "exposures": {
+    "fingerprint": "cc61eed97dc256e45066b31cdc6597a98a8159f0b328fd67381d50e77ffee35e",
+    "structure": "13d206ac4d10fad101d916beecd0e2027a0b0c092c9aadbe1468ae8e8977a5fb",
+    "version": 1
+  },
+  "labels": {
+    "fingerprint": "caccca188d82fa198a342c675cfa2e001a2e8c35879878ac5665919f238b2bfa",
+    "structure": "3043da9abb5ea6bddebbd4158c2585a59e9721606de38d3d978a33bb1846036f",
+    "version": 1
+  },
+  "measurements": {
+    "fingerprint": "f863993ab8bcb5f0cbe3b07ee051aeff9ad98a866a922f0eb4244b5b6a04504f",
+    "structure": "77012d62296aa0b84e39f6d47a76bf9e96eb8299431894ac6ea207ee43473a71",
+    "version": 1
+  },
+  "stars": {
+    "fingerprint": "0bc807459d7effa5d7483de401697cab1a1d2cd415fe83a7445f42134d6533ef",
+    "structure": "36836843edaed9308cd326e6e341bd3db8ee6979672c850eebbaa95543c80f6e",
+    "version": 1
+  },
+  "telemetry": {
+    "fingerprint": "7f53eea3ef29d6976e2d6c6a25bc334312b12513fdc9099e0f5eae4eb8bd5bed",
+    "structure": "f379cf1545a6e176860e4c9593191e35bad527b75d6fd9d32de5e578f184f1f6",
+    "version": 1
+  },
+  "verdicts": {
+    "fingerprint": "c98596e1ad708883f5837ebdb0add45d9675c15c326ba6ac01a632cdac2d805d",
+    "structure": "8c9f2a16406e3f251d97b534804cd5b405005490f6981c0bd190de84252a14ac",
+    "version": 1
+  },
+  "vsx": {
+    "fingerprint": "feb98ccb092dd630b7fd28748a33fd82c889ad5d72991c0bd781818d7b727ba9",
+    "structure": "e7845713c2fab7b0e72cb5217b9663027328246dbe75ebb004fc5abda7db23d3",
+    "version": 1
+  },
+  "vsx_match": {
+    "fingerprint": "59d86541069c7f621e2033ffdc4eb80bc601c0fd1d8d0f75f287b18c3ec5c8d6",
+    "structure": "f9cccfdd8eb63e3262a308162139e1f8e18612382835716a85739899f78db7bb",
+    "version": 1
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "amplitude_floor_long_term_mag": {
+    "decision": "docs/decisions/0002-initial-thresholds.md",
+    "value": 0.5
+  },
+  "amplitude_floor_single_epoch_mag": {
+    "decision": "docs/decisions/0002-initial-thresholds.md",
+    "value": 1.0
+  },
+  "astrometry_max_sep_arcsec": {
+    "decision": "docs/decisions/0002-initial-thresholds.md",
+    "value": 15.0
+  },
+  "constant_min_good_points": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 200.0
+  },
+  "constant_scatter_factor": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 1.5
+  },
+  "fade_floor_mag_per_century": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 0.3
+  },
+  "menzel_gap_end_year": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 1969.0
+  },
+  "menzel_gap_start_year": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 1953.0
+  },
+  "source_split_radius_arcsec": {
+    "decision": "docs/decisions/0002-initial-thresholds.md",
+    "value": 5.0
+  },
+  "vsx_exclude_radius_arcsec": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 30.0
+  },
+  "vsx_match_radius_arcsec": {
+    "decision": "docs/decisions/0005-leavitt-set-v0.md",
+    "value": 3.0
+  }
+}

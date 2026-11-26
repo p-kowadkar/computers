@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Check thresholds after a value change",
+      "trigger": "PostFileSave",
+      "description": "After a save to thresholds.py, ask the agent to run the threshold tests and remind that a changed value needs a new decision record. Enforced for real by tests and pre-commit.",
+      "matcher": "src/computers/thresholds\\.py$",
+      "action": {
+        "type": "agent",
+        "prompt": "src/computers/thresholds.py was just saved. Run `uv run pytest tests/unit/test_thresholds.py -q` and `uv run computers thresholds check`. If a value changed, a new decision file is needed in docs/decisions/ with the numbers behind the change, and docs/decisions/thresholds.lock.json must point at it. Do not reuse the previous decision file for a changed value."
+      }
+    }
+  ]
+}

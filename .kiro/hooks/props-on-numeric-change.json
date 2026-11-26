@@ -1,0 +1,15 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run property tests after numeric changes",
+      "trigger": "PostFileSave",
+      "description": "After a save under src/computers/l1/ or src/computers/bench/, ask the agent to run the property tests. Enforced for real by the pre-commit test run.",
+      "matcher": "src/computers/(l1|bench)/.*\\.py$",
+      "action": {
+        "type": "agent",
+        "prompt": "A numeric module under src/computers/l1/ or src/computers/bench/ was just saved. Run `uv run pytest tests/property -q` and report any failure before continuing. If the change touched a comparison on magnitudes, remember that a smaller magnitude is brighter, and check there is a test on both sides of the boundary. A changed threshold also needs a decision record (see .kiro/steering/testing.md)."
+      }
+    }
+  ]
+}
