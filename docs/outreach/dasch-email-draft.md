@@ -21,14 +21,14 @@ Thank you for DR7, and for the clear documentation. A great deal of this worked 
 
 ## 1. Request volume and rates (the main question)
 
-For the three tiles, once, I plan about:
+For the three tiles I have already pulled everything once, with about:
 
 - 12 `querycat` calls (four per tile, radius 1,850 arcsec each) and 15 `queryexps` calls;
 - 1,688 `lightcurve` calls in total, for stars with a catalog B magnitude of 13.5 or brighter (444 in the M44 tile, 186 in the T CrB tile, 1,058 in the Tabby's Star tile).
 
 The client uses at most 3 requests in flight, at least 0.2 s between request starts, exponential backoff on 429 and 5xx responses, and it never repeats a request it has already stored. Measured on the full API (with a Starglass key): a `lightcurve` call takes a median of 0.54 s, `querycat` at 1,850 arcsec about 17 s, and `queryexps` 16 to 20 s (95th percentile 23 s). At 3 requests in flight I reached 4.5 requests per second with no 429 responses. On the public API I reached only about 1.2 requests per second and received eight 429 responses, so I dropped to 1 request in flight there.
 
-- Are these rates acceptable? Is there a request rate you would like me to stay under for the full API?
+- Was that volume and rate acceptable? Is there a request rate you would like me to stay under for the full API when I refresh the data? I do not plan to pull the same tiles again except for that.
 - Would a **bulk export** of the lightcurves for three 2-degree tiles (a few thousand stars each) be easier for you than many individual calls? I am happy to take whatever format is simplest for you.
 
 ## 2. Behaviours I measured that differ from the documentation
