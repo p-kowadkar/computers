@@ -1,11 +1,11 @@
 # Draft email to the DASCH Astrophysics list
 
-**Status: draft for you to edit and send. Nothing here has been sent.**
+**Status: ready to send, updated 2026-11-27 with the numbers from Sprints 1 to 6. Nothing here has been sent. I cannot send email for you.**
 
 ## Before you send
 
 1. **Join the list first.** DASCH's own page says to subscribe to the DASCH Astrophysics email list for discussion, and that bulk-data requests go through it. Join at <https://gaggle.email/join/dasch@gaggle.email>, then post to `dasch@gaggle.email`.
-2. **Fill in the three bracketed items** below: your name, the repo link, and the pilot numbers (after you run the pilot).
+2. **Check the two bracketed items** below: your affiliation (delete the line if none) and whether you want to keep the repository link. Your name and the repository link are filled in. The pilot numbers are real now: the three tiles have been pulled.
 3. **Read it as the DASCH team would.** It is long on purpose, because every question comes from something measured. Cut the questions you care about least. The first three matter most.
 4. This draft contains no API key and no private data. Keep it that way.
 
@@ -15,7 +15,7 @@
 
 Hello,
 
-I am [your name]. I'm building an open-source (AGPL-3.0) triage tool that patrols three 2 by 2 degree DASCH tiles (M44, the field of KIC 8462852, and the field of T CrB) for stars that brightened or faded, and measures how often it is right by injecting known signals into real lightcurves. Repository: [link]. I use the DR7 web APIs directly through a small client with retries, and I store every response so nothing is requested twice. DASCH and daschlab are acknowledged in the README as your citation page asks.
+I am Pranav Kowadkar. I'm building an open-source (AGPL-3.0) triage tool that patrols three 2 by 2 degree DASCH tiles (M44, the field of KIC 8462852, and the field of T CrB) for stars that brightened or faded, and measures how often it is right by injecting known signals into real lightcurves. Repository: <https://github.com/p-kowadkar/computers>. I use the DR7 web APIs directly through a small client with retries, and I store every response so nothing is requested twice. DASCH and daschlab are acknowledged in the README as your citation page asks.
 
 Thank you for DR7, and for the clear documentation. A great deal of this worked the first time.
 
@@ -48,11 +48,12 @@ I list them in case they help, and to check I'm not misreading something.
 - **`UNCERTAIN_CATALOG_MAG`.** I find the per-point AFLAGS bit matches the catalog `v_flag` for all four stars I checked, and that `v_flag` is 1 for 97% of the sources within 14 arcmin of T CrB. Is the bit simply a copy of the catalog flag?
 - **Standard rejections and bright outbursts.** `apply_standard_rejections()` removed 25 of the 32 T CrB measurements from 1946 that lie at least 2 mag above its baseline, mostly through `LARGE_ISO_RMS`, `LARGE_LOCAL_SMOOTH_RMS` and `BIN_DRAD_UNKNOWN`. I assume that is expected for saturated images. Is there a recommended way to keep real outburst points while rejecting defects?
 - **Undocumented columns.** What are `reject_flag` (I read it as `local_bin_reject_flag`), `pass_bits`, `version_id`, `catalog_number` and `mask_index` in the `lightcurve` response?
+- **Non-detections with deep limits.** After my cleaning, non-detection rows are 6 to 12% of all rows. Of those, 80% (M44 tile) and 61% (T CrB tile) have a `limiting_mag_local` deeper than the star's own median magnitude, so the star should have been detected and was not. I read these as missing or failed measurements (for example a masked or blended image) and not as upper limits of a faint star. Is that right, and is there a flag or column that separates a true non-detection from a failed measurement? I currently tag them as `DEEP_LIMIT_SUSPECT` and never read them as evidence that a star faded.
 - **Timestamps.** `expdate` in `queryexps` appears in three forms (with and without a trailing `Z`, and minute-only), and one value has 60 seconds (`1970-06-03T05:07:60.0Z`). I read that as 05:08:00. Is that right?
 
 ## 4. Publication
 
-- May I publish **small excerpts** of lightcurve responses as test fixtures in the public repo? I have included four 150-row excerpts, about 75 KB in total, with attribution, and will remove them if you prefer.
+- May I publish **small excerpts** of lightcurve responses as test fixtures in the public repo? I have included five 150-row excerpts (T CrB, RY Cnc and three other stars), about 90 KB in total, with attribution, and will remove them if you prefer.
 - Later I would like to publish a **labelled set of cutout crops** (real stars versus plate defects, with defect types) and the injection benchmark. What are the terms for publishing derived products of this kind? I'd be glad to share the labelled set back with DASCH.
 - Could I request the **logbook pages** for a handful of specific plates (the ones around the 1946 T CrB eruption)? I'd list the plate IDs.
 
@@ -61,7 +62,7 @@ I list them in case they help, and to check I'm not misreading something.
 The defect-labelled cutout set, the injection-recovery benchmark and its completeness curves, and the full list of the behaviours above with the commands that reproduce them, if any of it is useful to you.
 
 Thank you,
-[your name]
+Pranav Kowadkar
 [affiliation, if any]
 
 ---
@@ -78,3 +79,5 @@ Thank you,
 | 95.4% blue by colourterm | `docs/decisions/0003-tile-sizes-and-access.md` |
 | 25 of 32 eruption points removed | `docs/decisions/0001-sprint0-findings.md`, W4 |
 | `v_flag` equals `UNCERTAIN_CATALOG_MAG` | same, W6 as corrected in `0003` |
+| 80% and 61% of retained non-detections are deeper than the star | `docs/data-cards/lc-sequences-v1.md` and `docs/decisions/0009-e1-training.md` |
+| Five excerpts, 90 KB | `tests/golden/fixtures/` |

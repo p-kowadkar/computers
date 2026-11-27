@@ -1136,7 +1136,7 @@ Weekend-sized sprints. Each ends in something you can look at: a plot, a number,
 | Sprint | Goal | Exit test |
 |---|---|---|
 | **S0** Data spike | Follow the RY Cnc tutorial. Pull T CrB, Tabby's Star and one boring star. Plot them. Pull one cutout each. Get a Starglass API key. | You can see the 1946 eruption. You can name the columns L1 will use. You have measured request times. |
-| **S1** Skeleton **[done 2026-11-25 except the DASCH email, which you send, and the Gaia DR4 check on 2 Dec]** | Repo, steering files, snapshot store with manifests, thin client, pilot pull for one tile. Send the DASCH email. Check Gaia DR4 access (it lands 2 Dec). | Golden test: 20 stars identical via daschlab and the thin client. `computers pull --tile m44 --pilot` is resumable. |
+| **S1** Skeleton **[done 2026-11-25. Left for you: send the DASCH email (`docs/outreach/dasch-email-draft.md`, ready) and run `scripts/check_gaia_dr4.py` on 2 Dec (`docs/outreach/gaia-dr4-check.ics` is a reminder). The test split was frozen on 2026-11-27 and the blocking hook was checked live.]** | Repo, steering files, snapshot store with manifests, thin client, pilot pull for one tile. Send the DASCH email. Check Gaia DR4 access (it lands 2 Dec). | Golden test: 20 stars identical via daschlab and the thin client. `computers pull --tile m44 --pilot` is resumable. |
 
 ### Phase 1 -- Benchmark first
 

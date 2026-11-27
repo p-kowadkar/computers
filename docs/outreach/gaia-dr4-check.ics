@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//The Computers//Gaia DR4 check//EN
+CALSCALE:GREGORIAN
+BEGIN:VEVENT
+UID:gaia-dr4-check-2026-12-02@computers
+DTSTAMP:20261127T120000Z
+DTSTART:20261202T123000Z
+DTEND:20261202T130000Z
+SUMMARY:Gaia DR4 check (The Computers)
+DESCRIPTION:Gaia DR4 is due 2026-12-02 12:00 CET (11:00 UTC). Run: uv run python scripts/check_gaia_dr4.py   If no gaiadr4 schema shows up, try again in an hour. Then write docs/decisions/0011-gaia-dr4-access.md with the table and column names.
+BEGIN:VALARM
+ACTION:DISPLAY
+DESCRIPTION:Gaia DR4 check
+TRIGGER:-PT0M
+END:VALARM
+END:VEVENT
+END:VCALENDAR
