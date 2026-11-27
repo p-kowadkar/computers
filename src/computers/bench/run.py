@@ -24,14 +24,23 @@ from computers.bench.inject import Signal, SignalSpec
 from computers.bench.trivial import TrivialDetector
 from computers.data import silver
 
-__all__ = ["SMOKE_AMPLITUDE_INDICES", "SMOKE_FAMILIES", "SMOKE_HOSTS", "format_report", "run_bench"]
+__all__ = [
+    "SMOKE_AMPLITUDE_INDICES",
+    "SMOKE_FAMILIES",
+    "SMOKE_HOSTS",
+    "format_report",
+    "run_bench",
+    "specs_from_rows",
+    "write_result",
+]
 
 SMOKE_HOSTS = 40
 SMOKE_FAMILIES = ("linear", "step", "outburst")
 SMOKE_AMPLITUDE_INDICES = (0, 2, 5)  # the lowest, a middle and the highest amplitude step
 
 
-def _specs(rows: list[dict]) -> list[SignalSpec]:
+def specs_from_rows(rows: list[dict]) -> list[SignalSpec]:
+    """The planned injections of `injections.parquet`, as `SignalSpec`s."""
     return [
         SignalSpec(
             int(r["host_id"]), r["family"], r["amplitude_index"], r["replicate"],
@@ -86,7 +95,7 @@ def run_bench(
     if missing:
         raise L.BuildError(f"{len(missing)} constant hosts have no measurements, for example {sorted(missing)[:3]}")
     detector = detector or TrivialDetector()
-    outcomes = run_injections(hosts, _specs(inj), detector)
+    outcomes = run_injections(hosts, specs_from_rows(inj), detector)
     bins = M.completeness(outcomes)
     result = {
         "split": split, "smoke": smoke, "detector": type(detector).__name__,

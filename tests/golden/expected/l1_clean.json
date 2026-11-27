@@ -1,0 +1,85 @@
+{
+ "112312223618": {
+  "detections": 61,
+  "good": 5,
+  "good_for_outburst": 27,
+  "rows": 150,
+  "star": "fixture:112312223618",
+  "tags": {
+   "ASTROMETRY": 11,
+   "DEEP_LIMIT_SUSPECT": 13,
+   "EMULSION_UNKNOWN": 150,
+   "METEOR_REJECTED": 41,
+   "PLATE_EDGE": 2,
+   "STD_HARD": 31,
+   "STD_SOFT": 25
+  }
+ },
+ "408395461194919": {
+  "detections": 78,
+  "good": 12,
+  "good_for_outburst": 20,
+  "rows": 150,
+  "star": "RY Cnc",
+  "tags": {
+   "ASTROMETRY": 12,
+   "BLEND_SUSPECT": 2,
+   "DEEP_LIMIT_SUSPECT": 4,
+   "EMULSION_UNKNOWN": 150,
+   "METEOR_REJECTED": 51,
+   "PLATE_EDGE": 18,
+   "STD_HARD": 49,
+   "STD_SOFT": 17
+  }
+ },
+ "408402551192833": {
+  "detections": 112,
+  "good": 29,
+  "good_for_outburst": 45,
+  "rows": 150,
+  "star": "fixture:408402551192833",
+  "tags": {
+   "ASTROMETRY": 33,
+   "BLEND_SUSPECT": 48,
+   "DEEP_LIMIT_SUSPECT": 35,
+   "EMULSION_UNKNOWN": 150,
+   "METEOR_REJECTED": 66,
+   "PLATE_EDGE": 7,
+   "STD_HARD": 42,
+   "STD_SOFT": 34
+  }
+ },
+ "415593021255513": {
+  "detections": 118,
+  "good": 33,
+  "good_for_outburst": 69,
+  "rows": 150,
+  "star": "fixture:415593021255513",
+  "tags": {
+   "ASTROMETRY": 18,
+   "DEEP_LIMIT_SUSPECT": 6,
+   "EMULSION_UNKNOWN": 150,
+   "METEOR_REJECTED": 57,
+   "PLATE_EDGE": 10,
+   "STD_HARD": 25,
+   "STD_SOFT": 51
+  }
+ },
+ "5139526051": {
+  "detections": 122,
+  "good": 2,
+  "good_for_outburst": 46,
+  "rows": 150,
+  "star": "fixture:5139526051",
+  "tags": {
+   "ASTROMETRY": 40,
+   "BLEND_SUSPECT": 20,
+   "DEEP_LIMIT_SUSPECT": 28,
+   "EMULSION_UNKNOWN": 150,
+   "METEOR_REJECTED": 64,
+   "PLATE_EDGE": 5,
+   "STD_HARD": 45,
+   "STD_SOFT": 68
+  }
+ }
+}

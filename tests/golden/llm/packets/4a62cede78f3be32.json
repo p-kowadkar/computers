@@ -1,0 +1,910 @@
+{
+ "candidate_id": "4a62cede78f3be32",
+ "star": {
+  "ref_number": 112312223618,
+  "tile": "m44",
+  "ra_deg": 129.528872,
+  "dec_deg": 20.385336,
+  "apass_b": 13.3100004196167,
+  "color": 1.100000023841858
+ },
+ "event": {
+  "kind": "disappearance",
+  "epoch_start": 1980.119637971253,
+  "epoch_end": 1989.0944083200245,
+  "amplitude_mag": 1.2071218490600586,
+  "lower_limit": false,
+  "single_plate": false
+ },
+ "evidence": [
+  {
+   "id": "E-001",
+   "block": 1,
+   "kind": "identity",
+   "payload": {
+    "ref_number": 112312223618,
+    "tile": "m44",
+    "ra_deg": 129.52887,
+    "dec_deg": 20.38534,
+    "apass_b": 13.31,
+    "color": 1.1,
+    "candidate_id": "4a62cede78f3be32"
+   }
+  },
+  {
+   "id": "E-002",
+   "block": 1,
+   "kind": "event",
+   "payload": {
+    "candidate": true,
+    "kind": "disappearance",
+    "epoch_start": 1980.12,
+    "epoch_end": 1989.09,
+    "amplitude_mag": 1.21,
+    "amplitude_is_lower_limit": false,
+    "single_plate": false,
+    "read_detrended_curve": true
+   }
+  },
+  {
+   "id": "E-003",
+   "block": 1,
+   "kind": "score",
+   "payload": {
+    "l2_score": 0.9999,
+    "note": "orders candidates for the budget; not a probability"
+   }
+  },
+  {
+   "id": "E-004",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1890,
+    "n": 9,
+    "median_offset_mag": -0.119,
+    "scatter_mag": 0.044
+   }
+  },
+  {
+   "id": "E-005",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1900,
+    "n": 29,
+    "median_offset_mag": -0.025,
+    "scatter_mag": 0.155
+   }
+  },
+  {
+   "id": "E-006",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1910,
+    "n": 34,
+    "median_offset_mag": -0.024,
+    "scatter_mag": 0.142
+   }
+  },
+  {
+   "id": "E-007",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1920,
+    "n": 17,
+    "median_offset_mag": 0.047,
+    "scatter_mag": 0.132
+   }
+  },
+  {
+   "id": "E-008",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1930,
+    "n": 47,
+    "median_offset_mag": -0.0,
+    "scatter_mag": 0.167
+   }
+  },
+  {
+   "id": "E-009",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1940,
+    "n": 42,
+    "median_offset_mag": 0.237,
+    "scatter_mag": 0.293
+   }
+  },
+  {
+   "id": "E-010",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1950,
+    "n": 1,
+    "median_offset_mag": -0.05,
+    "scatter_mag": 0.0
+   }
+  },
+  {
+   "id": "E-011",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1960,
+    "n": 6,
+    "median_offset_mag": 0.025,
+    "scatter_mag": 0.063
+   }
+  },
+  {
+   "id": "E-012",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1970,
+    "n": 9,
+    "median_offset_mag": 0.063,
+    "scatter_mag": 0.526
+   }
+  },
+  {
+   "id": "E-013",
+   "block": 2,
+   "kind": "decade_summary",
+   "payload": {
+    "decade": 1980,
+    "n": 1,
+    "median_offset_mag": -0.007,
+    "scatter_mag": 0.0
+   }
+  },
+  {
+   "id": "E-014",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "a",
+    "n": 9,
+    "median_offset_mag": -0.015
+   }
+  },
+  {
+   "id": "E-015",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "b",
+    "n": 1,
+    "median_offset_mag": -0.14
+   }
+  },
+  {
+   "id": "E-016",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "dnb",
+    "n": 1,
+    "median_offset_mag": -1.489
+   }
+  },
+  {
+   "id": "E-017",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "h",
+    "n": 2,
+    "median_offset_mag": 0.519
+   }
+  },
+  {
+   "id": "E-018",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "i",
+    "n": 50,
+    "median_offset_mag": 0.0
+   }
+  },
+  {
+   "id": "E-019",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "ir",
+    "n": 34,
+    "median_offset_mag": 0.334
+   }
+  },
+  {
+   "id": "E-020",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "j",
+    "n": 2,
+    "median_offset_mag": -0.061
+   }
+  },
+  {
+   "id": "E-021",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "ma",
+    "n": 30,
+    "median_offset_mag": -0.083
+   }
+  },
+  {
+   "id": "E-022",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "mc",
+    "n": 60,
+    "median_offset_mag": -0.025
+   }
+  },
+  {
+   "id": "E-023",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "md",
+    "n": 3,
+    "median_offset_mag": -0.269
+   }
+  },
+  {
+   "id": "E-024",
+   "block": 2,
+   "kind": "series_zero_point",
+   "payload": {
+    "series": "mf",
+    "n": 3,
+    "median_offset_mag": 0.088
+   }
+  },
+  {
+   "id": "E-025",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1980.122,
+    "series": "mc",
+    "plate": "mc40284e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 3.037,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-026",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1980.188,
+    "series": "dnb",
+    "plate": "dnb02510e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.304,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-027",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1981.916,
+    "series": "dnb",
+    "plate": "dnb02914e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.435,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-028",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1981.916,
+    "series": "dnb",
+    "plate": "dnb02915e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.712,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-029",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1982.208,
+    "series": "dnb",
+    "plate": "dnb02984e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.246,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-030",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1982.222,
+    "series": "dnb",
+    "plate": "dnb02994e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.398,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-031",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1982.304,
+    "series": "dnb",
+    "plate": "dnb03052e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.106,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-032",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1982.869,
+    "series": "dnb",
+    "plate": "dnb03325e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.548,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-033",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1982.962,
+    "series": "dnb",
+    "plate": "dnb03383e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.004,
+    "detection": false,
+    "tags": []
+   }
+  },
+  {
+   "id": "E-034",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1983.022,
+    "series": "dnb",
+    "plate": "dnb03401e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.188,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-035",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1983.249,
+    "series": "dnb",
+    "plate": "dnb03502e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.093,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-036",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1983.912,
+    "series": "dnb",
+    "plate": "dnb03848e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.1,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-037",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1983.928,
+    "series": "dnb",
+    "plate": "dnb03873e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.256,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-038",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.068,
+    "series": "dnb",
+    "plate": "dnb03961e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.203,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-039",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.144,
+    "series": "dnb",
+    "plate": "dnb04013e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.013,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-040",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.163,
+    "series": "dnb",
+    "plate": "dnb04032e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.19,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-041",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.835,
+    "series": "dnb",
+    "plate": "dnb04403e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.059,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-042",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.887,
+    "series": "dnb",
+    "plate": "dnb04425e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.347,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-043",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.9,
+    "series": "dnb",
+    "plate": "dnb04441e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.461,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-044",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1984.963,
+    "series": "dnb",
+    "plate": "dnb04468e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.617,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-045",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1985.19,
+    "series": "dnb",
+    "plate": "dnb04604e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.334,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-046",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1985.807,
+    "series": "dnb",
+    "plate": "dnb04950e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.001,
+    "detection": false,
+    "tags": []
+   }
+  },
+  {
+   "id": "E-047",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1986.165,
+    "series": "dnb",
+    "plate": "dnb05150e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.259,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-048",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1986.238,
+    "series": "dnb",
+    "plate": "dnb05178e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.006,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-049",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1986.326,
+    "series": "dnb",
+    "plate": "dnb05202e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.207,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-050",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1986.858,
+    "series": "dnb",
+    "plate": "dnb05522e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.111,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-051",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1988.191,
+    "series": "dnb",
+    "plate": "dnb06132e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.387,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-052",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1988.191,
+    "series": "dnb",
+    "plate": "dnb06134e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.259,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-053",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1989.031,
+    "series": "dnb",
+    "plate": "dnb06520e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.126,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-054",
+   "block": 3,
+   "kind": "measurement",
+   "payload": {
+    "year": 1989.094,
+    "series": "dnb",
+    "plate": "dnb06540e0s0",
+    "offset_mag": null,
+    "limiting_mag_offset": 1.03,
+    "detection": false,
+    "tags": [
+     "DEEP_LIMIT_SUSPECT"
+    ]
+   }
+  },
+  {
+   "id": "E-055",
+   "block": 3,
+   "kind": "points_omitted",
+   "payload": {
+    "listed": 30,
+    "total": 31,
+    "rule": "strongest half, even sample of the rest"
+   }
+  },
+  {
+   "id": "E-056",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "emulsion_non_blue",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-057",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "emulsion_unknown",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-058",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "blend_suspect",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-059",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "source_merged",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-060",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "shape_outlier",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-061",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "plate_edge",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-062",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "deep_limit_suspect",
+    "status": "flag",
+    "flagged": 29,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-063",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "soft_rejected_points",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-064",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "no_plate_offset",
+    "status": "pass",
+    "flagged": 0,
+    "of": 31
+   }
+  },
+  {
+   "id": "E-065",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "series_count",
+    "status": "pass",
+    "series": 2
+   }
+  },
+  {
+   "id": "E-066",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "detrended",
+    "status": "pass",
+    "detrended": true
+   }
+  },
+  {
+   "id": "E-067",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "known_variable",
+    "status": "pass"
+   }
+  },
+  {
+   "id": "E-068",
+   "block": 9,
+   "kind": "check",
+   "payload": {
+    "check": "rows_rejected_by_cleaning",
+    "status": "pass",
+    "rejected": 1395,
+    "of_rows": 3416
+   }
+  }
+ ],
+ "mode": "lightcurve_only",
+ "packet_version": "v0",
+ "cuts": [
+  "block 3 lists 30 of the 31 points of the trigger (the strongest and an even sample)"
+ ],
+ "token_estimate": 2474
+}

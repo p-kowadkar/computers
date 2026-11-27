@@ -1,0 +1,83 @@
+{
+ "112312223618": {
+  "keep": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  },
+  "reject": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  }
+ },
+ "408395461194919": {
+  "keep": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": "RY Cnc",
+   "triggers": []
+  },
+  "reject": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": "RY Cnc",
+   "triggers": []
+  }
+ },
+ "408402551192833": {
+  "keep": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  },
+  "reject": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  }
+ },
+ "415593021255513": {
+  "keep": {
+   "n_survivors": 0,
+   "n_triggers": 1,
+   "star": null,
+   "triggers": [
+    {
+     "amplitude_mag": 3.56,
+     "epoch_end": 1946.11,
+     "epoch_start": 1946.11,
+     "kill_reasons": [
+      "single_series_only"
+     ],
+     "kind": "outburst",
+     "n_evidence": 1
+    }
+   ]
+  },
+  "reject": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  }
+ },
+ "5139526051": {
+  "keep": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  },
+  "reject": {
+   "n_survivors": 0,
+   "n_triggers": 0,
+   "star": null,
+   "triggers": []
+  }
+ }
+}

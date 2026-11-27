@@ -20,12 +20,12 @@ docs/
   schemas.lock.json generated. Change with `computers schema lock`
 src/computers/
   data/             schemas.py  snapshot.py  (later: dasch.py  catalogs.py)
-  l1/               deterministic cleaning, detrending, seams, triggers, features
-  l2/               anomaly scores, embeddings, cutout classifier, ranker
-  crew/             the agents, context packets, debate (the only layer that calls an LLM)
-  mcp/              MCP servers: dasch, catalogs
+  l1/               tags, curve, scatter, clean, context, detrend, seams, triggers, kill, analyse, candidates (later: features)
+  l2/               features, anomaly, ranker, budget, run (later: embeddings, cutout classifier)
+  crew/             schemas, packet, llm (gateway and shim), validate, base (the one NOOA import), maury, spike; later the other agents and the debate
+  mcp/              MCP servers: dasch_server, catalogs_server over the local tables (imports data only)
   bench/            the Leavitt Set: injection, metrics, ablations
-  ml/               training code for lc_encdec, cutout_clf, verdict_distill, text_embed, direction
+  ml/               E1 data and evaluation (sequences, dataset, masking, baselines, evaluate); lc_encdec/ (model, train, report); later cutout_clf, verdict_distill, text_embed, direction
   telemetry/        one row per star per layer
   thresholds.py     every numeric threshold
   cli.py            the `computers` command

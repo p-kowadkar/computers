@@ -28,6 +28,47 @@ uv run pre-commit install
 
 Every commit then runs the secret scan, ruff, `computers schema check`, `computers thresholds check` and the fast test suite. Datasets that need the optional spike tools (`daschlab`, `astropy`, `matplotlib`) use `uv sync --group spike`.
 
+## Optional dependency groups
+
+| Group | Install | Adds | Used by |
+|---|---|---|---|
+| `spike` | `uv sync --group spike` | daschlab, astropy, matplotlib, astroquery | the Sprint 0 and 1 scripts and parity tests |
+| `ml` | `uv sync --group ml` | PyTorch 2.15 | E1 training (`computers ml train`) |
+| `crew` | `uv sync --group crew` | NOOA 0.0.12, pydantic, httpx | the crew (`computers crew spike`) |
+| `mcp` | `uv sync --group mcp` | the MCP SDK 1.30 | the MCP servers |
+
+`uv sync` with no group removes the optional packages again. The fast test suite runs without any of them, and tests that need one skip.
+
+## The crew container
+
+```bash
+docker build -t computers-crew .
+docker run --rm --network none computers-crew          # the fast suite, no key and no network
+docker run --rm -e OPENROUTER_API_KEY computers-crew uv run --no-sync computers crew spike --help
+```
+
+The image holds no key and no data. Code as action is off: every ellipsis method carries `@strategy(PredictStrategy(...))`.
+
+## MCP servers
+
+Two read-only servers over the local tables (no network, bounded replies, dev tiles only unless `COMPUTERS_MCP_TILES` lists more):
+
+```bash
+uv run --group mcp python -m computers.mcp.dasch_server       # get_lightcurve, list_exposures, get_plate_info
+uv run --group mcp python -m computers.mcp.catalogs_server    # vsx_search
+```
+
+To use them in Kiro, add this to `.kiro/settings/mcp.json` (not done for you):
+
+```json
+{
+  "mcpServers": {
+    "dasch": {"command": "uv", "args": ["run", "--group", "mcp", "python", "-m", "computers.mcp.dasch_server"], "cwd": "/path/to/Computers"},
+    "catalogs": {"command": "uv", "args": ["run", "--group", "mcp", "python", "-m", "computers.mcp.catalogs_server"], "cwd": "/path/to/Computers"}
+  }
+}
+```
+
 ## Secrets
 
 API keys come from environment variables only. Never commit them.
@@ -35,7 +76,7 @@ API keys come from environment variables only. Never commit them.
 | Variable | Used for |
 |---|---|
 | `STARGLASS_API_KEY` | DASCH "full" API (higher rate limits). Create a free Starglass account and copy the key from the profile menu. Scripts pass it to daschlab as `DASCHLAB_API_KEY` for their own process only. |
-| `OPENROUTER_API_KEY` | LLM gateway for the crew (from Sprint 8) |
+| `OPENROUTER_API_KEY` | LLM gateway for the crew (Sprint 8). Set a spend limit on the key in the OpenRouter dashboard as well. Only `crew/llm.py` reads it. |
 
 ## Data and snapshots
 

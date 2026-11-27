@@ -72,6 +72,75 @@ Spec: `.kiro/specs/s1b-thin-client/`. Record: `docs/decisions/0003-tile-sizes-an
 - **Defaults adopted** (`0004`): the absolute L3 budget cap (7.5) and the plate-disjoint split rule (9.0). You can overrule either.
 - **Outside services on 2026-11-25:** Strasbourg VizieR and SIMBAD were down (SIMBAD works on `simbad.harvard.edu`). The CfA VizieR mirror is flaky for VSX. AAVSO's API sits behind Cloudflare. Gaia DR4 is due 2026-12-02 12:00 CET.
 
+### 2026-11-27 -- Sprint 8 the crew spike, the gateway and the MCP servers
+
+Spec: `.kiro/specs/s8-crew-spike-and-mcp/`. Record: `docs/decisions/0010-crew-gateway.md`. Built: the schemas and packet v0 (blocks 1, 2, 3 and 9), our LLM gateway (cache, price, cap, provider pinning) with a localhost shim, Maury on NOOA and on the in-house base, the claim validator, two MCP servers over local data, and a container. **Live run (2026-11-27): NOOA 10 of 10 schema-valid, the in-house fallback 9 of 10, about $0.023 in all.** The one miss was `max_tokens` (1500), now 4000.
+
+- **NOOA works through a local shim.** `nooa` 0.0.12 installs on Python 3.12 (254 MB with litellm), accepts a base URL, and returns validated pydantic objects. It sends only `model`, `messages`, `response_format` and a per-instance `prompt_cache_key`, so the shim adds temperature 0 and the provider pin, and the cache key drops the instance id.
+- **NOOA retries a bad reply 10 times by default,** each a paid call. The crew sets 2. The cap is the backstop.
+- **The one-import rule holds:** only `crew/base.py` imports `nooa`, and a test walks the source for every ellipsis method's `PredictStrategy`.
+- **MCP:** the servers use SDK 1.30. Version 2 renamed `FastMCP`, and NOOA's MCP extra needs `<2`. No tool is registered for data that is not local.
+- **The container** runs the fast suite with no network and no key: 1,132 passed, 14 skipped, in 62 s. The image is 2.2 GB.
+- **The NOOA trace viewer** (`nooa start-dev`, port 5001) records the method call, the generation and the model call per request, and binds to all interfaces.
+- **Model:** `anthropic/claude-haiku-5.5` on provider `anthropic` (structured outputs supported, 0.10 and 0.50 US dollars per million tokens), as a config value.
+- **Live run:** `anthropic/claude-haiku-5.5` on 10 packets plus the T CrB reference. NOOA 10 of 10, fallback 9 of 10 (3 of 12 fallback replies hit `max_tokens`, one empty). Both paths cite only ids that exist. For T CrB's real eruption Maury argues artifact, as the Skeptic should. The responses are committed and replay offline.
+- **OpenRouter reported a cost of 0** for 120,000 tokens, so the gateway uses the price table when the reported cost is 0, and charges a paid empty reply.
+- **Framework decision:** NOOA stays, with the in-house base as the fallback. Re-compare at Sprint 9.
+- **Threshold:** `llm_cap_run_usd` 2 (start).
+
+### 2026-11-27 -- Sprint 6 E1, the lightcurve encoder-decoder
+
+Spec: `.kiro/specs/s6-e1-training/`. Record: `docs/decisions/0009-e1-training.md`. The sequence dataset, the masking, three baselines, the evaluation harness, the model and the training script are built and run on the Mac. **The pass mark is not met.** **Chosen 2026-11-27 by default: stop E1 here** (`0009` section 6). Sprint 7 is cut, and Track D1 is moot.
+
+- **The encoder predicts the star median.** Trained on M44 and scored on T CrB, its RMSE is 0.1885 mag, the same as the median (difference -0.0001, interval -0.0004 to +0.0003). It beats linear interpolation (0.2269) and the nearest-5 same-series median (0.1954), but both are worse than the median. Its predictions have a standard deviation of 0.012 mag.
+- **There is little to reconstruct.** The median's error is about one measurement's noise (0.15 mag recorded), the stars are mostly constant, and the model does no better on its own training stars (0.003 mag) or on same-tile stars. It can fit a fixed batch, so the code works.
+- **Encoder T (171 stars) is 0.21 mag worse than the median on M44,** and 2.25 mag RMSE in 1953 to 1969. The cause is not established.
+- **60 to 80% of limit rows are deeper than the star itself.** They are missing points faking deep limits, not upper limits of a faint star.
+- **The Mac is enough:** 18 s per epoch for 383 stars on the Apple GPU. No AWS. Astromer 2's weights cannot be used (TensorFlow, MACHO), which closes the "[verify, Sprint 6]" note.
+- **Tracker:** none. Each run writes a config, a metrics log and checkpoints to `data/runs/<name>/`.
+- **Not done:** the third encoder (both tiles), which would have been for real use.
+
+### 2026-11-27 -- Sprint 5 L2 features, ranker and budget
+
+Spec: `.kiro/specs/s5-l2-features-ranker/`. Record: `docs/decisions/0008-l2-ranker.md`. L2 now has 14 features per star, an isolation-forest anomaly score, a calibrated logistic ranker, the budget rule and `computers l2 run`. Numbers are on the dev split (361 constants, 21,660 planted signals). The test tile has not been run.
+
+- **L2 is not a filter.** The pass mark was a gain of 3 percentage points of outburst recovery over L1 strict at no more false alarms. The plain ranker gains +2.7 (95% interval +0.5 to +4.7) at one false-alarm constant and +1.2 (+0.3 to +3.9) at none. The result is not shown, and the L1 series rule stays at 2.
+- **The anomaly score does not help.** Outburst-only AUC is 0.885 with and without it. It stays in the code as the baseline for Sprint 7 (7.2).
+- **The ranker orders, it does not decide.** Outburst-only AUC is 0.885 against 0.370 for ordering by amplitude, so amplitude would put false alarms first. Its probability is not a rate: 8,958 positives against 43 negatives push held-out scores to 0.98 to 1.00.
+- **The budget does not bind.** One trigger per star leaves 22 stars on M44 and 8 on T CrB. 17 are selected, 13 stars whose only candidates are known variables take no place, and nothing is left out by the cap of 20 per tile and 60 in total. The 91 candidate rows of Sprint 4 are 30 stars.
+- **The series rule's cost is real and stays.** L1 relaxed recovers 19.0% of outbursts at 102 false alarms per 1,000. Strict recovers 9.9% at 3. Buying some back needs cutouts (7.3).
+- **Four M44 steps share the epoch 1971.0,** like the 12 Tabby stars at 1962.6. It looks like a tile-level artefact after the Menzel Gap, and no kill reason covers it yet.
+- **Thresholds:** `budget_per_tile` 20 and `budget_total` 60 are registered (decided), with the filter pass mark `l2_filter_min_gain_points` 3 (start).
+
+### 2026-11-26 -- Sprint 4 L1 triggers
+
+Spec: `.kiro/specs/s4-l1-triggers/`. Record: `docs/decisions/0007-l1-trigger-thresholds.md`. L1 now finds outbursts, dips, steps, long-term variation and disappearances, applies the kill reasons, and writes candidates and telemetry (`computers l1 run`). Numbers are on the 361 dev constants and 21,660 injections. The test tile has not been run.
+
+- **T CrB's 1946 eruption fires as an outburst** from the full curve (26 evidence points, at least 3.6 mag, a lower limit because plates saturate).
+- **False alarms at the L1 exit: 1 of 361 constants** (3 per 1,000, interval 0 to 16), one dip. Outburst false alarms are 0 only because the series rule kills 38 of them.
+- **A single-plate outburst can never survive L1.** One plate is one series and the rule needs 2. They are found and logged as `single_series_only`. Lifting the rule gives 100 false alarms per 1,000.
+- **Outburst recovery is about 10%** (plate sampling). Dip recovery is 44%. Completeness at 50%: step 0.55 mag, wave 0.33 mag, linear 1.16 mag. Outbursts and dips do not reach 50% on the grid.
+- **The plan's dip and outburst rules also fire on persistent changes.** 341 of 4,088 gap steps were recovered as dips and outbursts. A recovery check (the median of the next 5 good points must move back at least 0.25 of the way) cuts that to 35. My first suggested form failed T CrB and was replaced.
+- **Seam rule:** switching it off recovers 530 expected-missed signals, so it earns its place. Detrending and the meteor policy differ by 2 false alarms in 361, which is within noise.
+- **Disappearance** fires on 20 of 1,688 stars and has no completeness curve. 12 Tabby stars share one last detection (1962.6), which looks like a processing artefact. No tile-level kill reason was built.
+- **Patrol of the dev tiles:** M44 65 candidates from 444 stars, T CrB 26 from 186. Flags: `known_variable`, `not_detrended`, `lower_limit`, `needs_cutouts`.
+- **Thresholds:** 15 registered in `0007`. Kept values are `decided`, the rest `start`.
+
+### 2026-11-26 -- Sprint 3 L1 cleaning, detrending and seams
+
+Spec: `.kiro/specs/s3-l1-cleaning-detrending/`. Record: `docs/decisions/0006-l1-cleaning-and-detrending.md`. L1 now has the nine cleaning steps as tags on a curve, neighbour-ensemble detrending, and the seam rule. 12 thresholds were added with their record.
+
+- **Detrending helps a little and costs nothing.** On the 361 dev constants it cuts between-block scatter by 7% and false alarms of the trivial detector at 0.2 mag from 14 to 6 (0.3 mag: 6 to 1). The intervals overlap. Completeness is unchanged to within 0.01.
+- **The Tabby's Star exit test is not met.** KIC 8462852's decade-median slope is +0.156 raw and +0.179 detrended mag per century, above the 97.5th percentile of its look-alikes both ways (98th percentile). The look-alikes show no common trend, so detrending has nothing to remove. This is not a claim about the star. The system still would not call it a fade, because 0.18 is under the 0.3 mag per century fade floor (6.2).
+- **Bright and red stars cannot be detrended** (6.2). T CrB (B 11.43, colour 1.32) has a pool of 2. The share of stars with 10 or more comparison stars is 82% (M44), 75% (T CrB) and 93% (Tabby), and 0 to 23% for B 7 to 10. Those stars get `few_comparisons` and their raw curve.
+- **Meteor series are 10 to 21% of good detections** and 50% of the 1950s in M44 and T CrB (6.1 step 4). The benchmark cannot tell `reject` from `keep`. The default stays `reject` until the Sprint 4 triggers can; your decision is in `0006`.
+- **Standard rejections split into hard and soft** (6.1 step 2). `good_for_outburst` keeps points rejected only by `LARGE_ISO_RMS`, `LARGE_LOCAL_SMOOTH_RMS` and `BIN_DRAD_UNKNOWN`. Twenty-five or more T CrB eruption points of the full curve survive it under both meteor policies.
+- **Seams** (6.3): steps in the gap are 100% `seam_only`. Of other steps, 69% are visible inside a stretch and 28% have too few points in theirs, almost all in the sparse 1880s, 1890s, 1950s and 1960s.
+- **Source splitting** needed 20 neighbour lightcurves. Overlap is measured against the smaller curve: the first definition merged all 20 pairs, the corrected one merges 2.
+- **Emulsion** reads `median_colorterm_apass`, which is missing for 53% of M44 exposures. Those are tagged unknown and kept.
+- **The plan's plate-offset invariance** (6.7) holds only to about `15 sigma / N`, because baselines are medians.
+- **Housekeeping:** a `slow` test marker, `data/series.py` (daschlab's series kinds), `l1/scatter.py` (moved from `bench`), and a fifth golden fixture (RY Cnc). `make_golden_fixtures.py` must not be rerun.
+
 ---
 
 ## 0. Read this first
@@ -437,7 +506,7 @@ Also fit a per-series zero-point for each star. A "trend" that exists only as an
 
 ### 6.4 Triggers
 
-All thresholds are **[start]** and get set properly from the benchmark in Sprint 4.
+Starting values below. Sprint 4 kept them on the dev split and added a recovery check for outbursts and dips (the median of the next 5 good points moves back at least 0.25 of the way); see `0007`. **[rev 2026-11-26]**
 
 | Event | Rule |
 |---|---|
@@ -495,11 +564,11 @@ Hand-made features per star, on the detrended curve:
 - Spread of per-series zero-points
 - Point count, time span, populated decades
 
-An isolation forest over these gives the baseline anomaly score. Everything fancier has to beat this.
+An isolation forest over these gives the baseline anomaly score. Everything fancier has to beat this. **[rev 2026-11-27]** Built (`l2/features.py`, `l2/anomaly.py`). It adds nothing to the ranker on the dev benchmark and stays as the baseline for 7.2 (`0008`).
 
 ### 7.2 Embedding-based scoring
 
-Lightcurve embeddings from Track E1 (9.1) feed a second anomaly score and a "stars that behave like this one" lookup. Only adopted if it beats 7.1 on the benchmark.
+Lightcurve embeddings from Track E1 (9.1) feed a second anomaly score and a "stars that behave like this one" lookup. Only adopted if it beats 7.1 on the benchmark. **[rev 2026-11-27]** Not built. E1 did not beat the star median (`0009`), so there are no embeddings to adopt.
 
 ### 7.3 Cutout evidence
 
@@ -507,13 +576,13 @@ For each triggered event, classifier A (9.2) scores cutouts from the event plate
 
 ### 7.4 The ranker
 
-A small logistic regression that answers one question: is this worth an LLM call? Inputs: trigger strength, both anomaly scores, cutout scores, L1 flags. Trained on the injection benchmark. Calibrated, so the threshold means something.
+A small logistic regression that answers one question: is this worth an LLM call? Inputs: trigger strength, both anomaly scores, cutout scores, L1 flags. Trained on the injection benchmark. Calibrated, so the threshold means something. **[rev 2026-11-27]** Built (`l2/ranker.py`). Calibrated to the benchmark mix, so its probability orders triggers and is not a rate. It does not meet the bar for acting as a filter, so it orders candidates for the budget only (`0008`).
 
 ### 7.5 Budget rule
 
 **[start]** At most 20 candidates per tile per patrol reach L3, and no more than 1 L3 call per 1,000 stars. The ranker's threshold is set to meet the budget, and the telemetry report shows what was left on the table.
 
-**[rev 2026-11-25] Adopted as default (`docs/decisions/0004-budget-and-split-defaults.md`).** With 1,688 stars in total, "1 call per 1,000 stars" allows about 1.7 L3 calls. Replace it with an absolute cap (at most 20 candidates per tile and 60 in total) plus a dollar cap per patrol run.
+**[rev 2026-11-25] Adopted as default (`docs/decisions/0004-budget-and-split-defaults.md`).** With 1,688 stars in total, "1 call per 1,000 stars" allows about 1.7 L3 calls. Replace it with an absolute cap (at most 20 candidates per tile and 60 in total) plus a dollar cap per patrol run. **[rev 2026-11-27]** Built as `l2/budget.py`: stars, not candidate rows, one trigger per star, known variables take no place. Registered as `budget_per_tile` and `budget_total`.
 
 ---
 
@@ -571,7 +640,7 @@ class Maury(Agent, llm=crew_llm):
         ...
 ```
 
-**The seam:** agent classes import NOOA in one place. If NOOA breaks or stalls, the fallback is a small in-house base class that implements ellipsis methods as a schema-validated LLM call. The deterministic methods and all tests are untouched. Pin the NOOA version; upgrade on purpose.
+**[rev 2026-11-27]** Built: NOOA is imported in `crew/base.py` only, next to the fallback base, and both reach the model through `crew/llm.py`. **The seam:** agent classes import NOOA in one place. If NOOA breaks or stalls, the fallback is a small in-house base class that implements ellipsis methods as a schema-validated LLM call. The deterministic methods and all tests are untouched. Pin the NOOA version; upgrade on purpose.
 
 ### 8.3 The debate
 
@@ -702,7 +771,7 @@ Five tracks. Each one is written the same way: its job, raw data, sequence gener
 
 **Gate.** It enters L2 only if it beats the feature baseline on injection recovery. Expect this to be hard: with 0.15 mag noise and sparse sampling, the model may learn the sampling pattern more than the star. The timestamp-shuffle test is there to catch exactly that.
 
-**Where.** Entirely on the Mac. AWS only for a sweep.
+**Where.** Entirely on the Mac. AWS only for a sweep. **[rev 2026-11-27]** The gate is not passed and E1 does not enter L2 (`0009`). D1 is moot with it. Built on the Mac in Sprint 6, 18 s per epoch. Astromer 2's weights are TensorFlow and MACHO-trained, so they are not used. The first encoder does not beat the star median on a held-out tile (`0009`).
 
 **You should be able to explain:** why masked reconstruction works without labels; why timestamps stay visible; why you didn't normalize amplitude; what the one-sided loss does; why the decoder is thrown away; what the timestamp-shuffle test showed.
 
@@ -1074,22 +1143,22 @@ Weekend-sized sprints. Each ends in something you can look at: a plot, a number,
 | Sprint | Goal | Exit test |
 |---|---|---|
 | **S2** Leavitt Set v0 | VSX cross-match, constant selection, injection engine, metrics | The harness scores a trivial threshold detector and draws a completeness curve |
-| **S3** L1 cleaning and detrending | Section 6.1 to 6.3 | Property tests pass. False alarms on constants measured before and after detrending. Tabby's Star trend sits inside the ensemble spread. |
-| **S4** L1 triggers | Section 6.4 to 6.6 | First real completeness curves. T CrB fires as an outburst. Thresholds chosen on the dev split and recorded. |
+| **S3** L1 cleaning and detrending **[built 2026-11-26; the Tabby trend check is not met, see the changelog]** | Section 6.1 to 6.3 | Property tests pass. False alarms on constants measured before and after detrending. Tabby's Star trend sits inside the ensemble spread. |
+| **S4** L1 triggers **[built 2026-11-26; see the changelog]** | Section 6.4 to 6.6 | First real completeness curves. T CrB fires as an outburst. Thresholds chosen on the dev split and recorded. |
 
 ### Phase 2 -- L2
 
 | Sprint | Goal | Exit test |
 |---|---|---|
-| **S5** Features, ranker, telemetry | Section 7.1, 7.4, 7.5 | L2 cuts false alarms at equal recovery. First topology report. |
-| **S6** E1 training | Sequence spec, dataset, encoder-decoder | Beats linear interpolation on masked reconstruction |
-| **S7** E1 evaluation and D1 | Probes, retrieval, anomaly comparison, nuisance erasure | Gate decision written up, either way |
+| **S5** Features, ranker, telemetry **[built 2026-11-27; L2 does not filter, see the changelog]** | Section 7.1, 7.4, 7.5 | L2 cuts false alarms at equal recovery. First topology report. |
+| **S6** E1 training **[built 2026-11-27; the pass mark is not met; E1 stops here, see the changelog]** | Sequence spec, dataset, encoder-decoder | Beats linear interpolation on masked reconstruction |
+| **S7** E1 evaluation and D1 **[cut 2026-11-27: E1 equals the star median, so there is nothing to evaluate. `0009` is the gate write-up.]** | Probes, retrieval, anomaly comparison, nuisance erasure | Gate decision written up, either way |
 
 ### Phase 3 -- The crew
 
 | Sprint | Goal | Exit test |
 |---|---|---|
-| **S8** NOOA spike and MCP | One agent (Maury) end to end. Gateway confirmed. Trace viewer up. Both MCP servers with cache. Container. | 10 of 10 packets return a schema-valid argument, on NOOA and on the fallback base class |
+| **S8** NOOA spike and MCP **[built and run live 2026-11-27; see the changelog]** | One agent (Maury) end to end. Gateway confirmed. Trace viewer up. Both MCP servers with cache. Container. | 10 of 10 packets return a schema-valid argument, on NOOA and on the fallback base class |
 | **S9** Packets and full crew | Packet builder, all six agents, debate loop, claim validator | 50 candidates judged end to end with case files |
 | **S10** Crew evaluation | L3 benchmark v0, debate ablation, packet-block ablation | Decision on whether the debate stays, with numbers |
 

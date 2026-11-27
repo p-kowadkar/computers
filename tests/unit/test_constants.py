@@ -4,6 +4,7 @@ import pytest
 
 from computers.bench import constants as C
 from computers.bench.inject import Signal
+from computers.l1 import scatter as S
 from computers.thresholds import THRESHOLDS
 
 J2000 = 2451545.0
@@ -27,7 +28,7 @@ def curve(seed=0, n=400, noise=0.12, base=12.0, signal=None, first=1890.0, last=
 
 def test_flat_noise_has_scatter_near_the_noise_and_a_small_trend():
     s = C.star_stats(*curve(noise=0.12))
-    assert s.n_good == 400 and s.n_blocks >= C.MIN_BLOCKS
+    assert s.n_good == 400 and s.n_blocks >= S.MIN_BLOCKS
     assert s.scatter_within == pytest.approx(0.12, abs=0.02)
     assert s.scatter_between < 0.04
     assert s.median_mag == pytest.approx(12.0, abs=0.03)
@@ -198,5 +199,5 @@ def test_output_has_one_row_per_star_with_the_reference_values():
 def test_reference_ignores_undefined_values_and_gives_nan_when_all_are_undefined():
     vals = np.array([np.nan, 1.0, 3.0, np.nan])
     mags = np.array([10.0, 11.0, 12.0, 13.0])
-    assert C._reference(vals, mags).tolist() == [2.0, 2.0, 2.0, 2.0]
-    assert np.isnan(C._reference(np.full(4, np.nan), mags)).all()
+    assert S.reference_scatter(vals, mags).tolist() == [2.0, 2.0, 2.0, 2.0]
+    assert np.isnan(S.reference_scatter(np.full(4, np.nan), mags)).all()

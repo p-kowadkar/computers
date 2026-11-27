@@ -1,281 +1,142 @@
-import numpy as np
+"""The Sprint 8 exit run, on saved packets and a scripted model (spec S8 R6). No network."""
+import json
+
 import pytest
-from hypothesis import given
-from hypothesis import strategies as st
 
-from computers.data import spike
+pytest.importorskip("pydantic")
+pytest.importorskip("httpx")
+pytest.importorskip("nooa")
+
+from test_llm import Fake, ok
+from test_packet import CAND, STAR, make
 
-NAN = float("nan")
+from computers.crew import llm as L
+from computers.crew import packet as P
+from computers.crew import spike as S
 
+CFG = L.ModelConfig("vendor/model-x", "prov", 1.0, 2.0)
+GOOD = json.dumps({"side": "artifact", "claims": [{"text": "points sit on plate edges", "evidence_ids": ["E-001"]}]})
+MIXED = json.dumps({"side": "artifact", "claims": [{"text": "kept", "evidence_ids": ["E-001"]}, {"text": "invented", "evidence_ids": ["E-777"]}]})
+ALL_BAD = json.dumps({"side": "artifact", "claims": [{"text": "invented", "evidence_ids": ["E-777"]}]})
 
-def _curve(years, mags, reject=None):
-    years = np.array(years, dtype=float)
-    mags = np.array(mags, dtype=float)
-    reject = np.zeros(len(years), dtype=np.int64) if reject is None else np.array(reject)
-    return years, mags, reject
 
+def packets(n=3):
+    out = []
+    for i in range(n):
+        trig, inp = make(seed=i)
+        out.append(P.build_packet({**CAND, "candidate_id": f"cand{i}"}, STAR, trig, inp))
+    return out
 
-# ---------------------------------------------------------------- credentials
 
+def factory(tmp_path, transport, *, cap=2.0, key=True):
+    def gateway_for(path):
+        return L.Gateway(CFG, cache_dir=tmp_path / "cache", log_path=tmp_path / f"{path}.jsonl", budget=L.RunBudget(cap_usd=cap),
+                         transport=transport, env={L.KEY_VAR: "sk-test"} if key else {}, run_id=path)  # fmt: skip
 
-def test_api_mode_public_without_key():
-    assert spike.api_mode_from_env({}) == ("public", None)
-    assert spike.api_mode_from_env({"STARGLASS_API_KEY": "   "}) == ("public", None)
+    return gateway_for
 
 
-def test_api_mode_full_with_key_and_trims():
-    assert spike.api_mode_from_env({"STARGLASS_API_KEY": " abc123 "}) == ("full", "abc123")
+def test_both_paths_count_valid_replies_and_report_tokens_and_cost(tmp_path):
+    pk = packets(3)
+    r = S.run_paths(pk, factory(tmp_path, Fake(ok(GOOD, 800, 60, cost=0.001))))
+    for name in ("nooa", "fallback"):
+        p = r["paths"][name]
+        assert p["valid"] == 3 and p["of"] == 3 and p["needed_stripping"] == 0 and p["failures"] == []
+        assert p["calls"] >= 3 and p["tokens_in"] >= 2400 and 0 < p["cost_usd"] <= p["cap_usd"]
 
 
-def test_daschlab_variable_alone_is_not_used():
-    # The project variable is the only supported source of the key.
-    assert spike.api_mode_from_env({"DASCHLAB_API_KEY": "abc"}) == ("public", None)
+def test_a_reply_that_needed_the_validator_is_counted_and_is_valid_only_if_something_remains(tmp_path):
+    pk = packets(2)
+    r = S.run_paths(pk, factory(tmp_path, Fake(ok(MIXED))), paths=("fallback",))
+    p = r["paths"]["fallback"]
+    assert p["valid"] == 2 and p["needed_stripping"] == 2 and p["claims_removed"] == 2
+    assert p["rows"][0]["claims_removed"][0]["reason"] == "unknown_evidence_id: E-777" and p["rows"][0]["claims_kept"] == 1
+    r2 = S.run_paths(pk, factory(tmp_path / "b", Fake(ok(ALL_BAD))), paths=("fallback",))
+    q = r2["paths"]["fallback"]
+    assert q["valid"] == 0 and q["needed_stripping"] == 2  # everything removed: counted, and not valid
 
 
-def test_redact_removes_every_occurrence():
-    out = spike.redact("a SECRET b SECRET", "SECRET")
-    assert "SECRET" not in out
-    assert spike.redact("nothing here", None) == "nothing here"
-    assert spike.redact("nothing here", "") == "nothing here"
+def test_an_unreadable_reply_is_a_recorded_failure_and_does_not_stop_the_other_packets(tmp_path):
+    t = Fake(ok("not json"), ok("still not json"), ok(GOOD))
+    r = S.run_paths(packets(2), factory(tmp_path, t), paths=("fallback",))
+    p = r["paths"]["fallback"]
+    assert p["valid"] == 1 and p["of"] == 2 and p["fallback_retries"] >= 1
+    assert len(p["failures"]) == 1 and "after one retry" in p["failures"][0]["failure"]
 
 
-# ---------------------------------------------------------------- T CrB check
+def test_the_cap_ends_the_spend_and_is_reported_as_failures_not_a_crash(tmp_path):
+    r = S.run_paths(packets(4), factory(tmp_path, Fake(ok(GOOD, cost=1.5)), cap=1.0), paths=("fallback",))
+    p = r["paths"]["fallback"]
+    assert p["valid"] == 1 and len(p["failures"]) == 3 and all("CapReached" in f["failure"] for f in p["failures"])
+    assert p["cost_usd"] == 1.5
 
 
-def test_outburst_detected_when_point_is_much_brighter():
-    # Quiescent near mag 10, one 1946 point at mag 6: brighter by 4 mag.
-    y, m, r = _curve([1920, 1930, 1940, 1946.1], [10.0, 10.1, 9.9, 6.0])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert res["passed"]
-    assert res["baseline_median"] == pytest.approx(10.0)
-    assert res["points"][0]["brighter_by"] == pytest.approx(4.0)
+def test_a_second_run_from_the_cache_gives_identical_arguments_at_zero_cost_with_no_key_and_no_network(tmp_path):
+    pk = packets(3)
+    first = S.run_paths(pk, factory(tmp_path / "one", Fake(ok(GOOD, 700, 50, cost=0.002))))
+    # new logs, the same cache, a transport that fails if touched, and no key
+    class Boom:
+        def post(self, *a, **k):
+            raise AssertionError("the network was touched on a cached run")
 
+    def again(path):
+        return L.Gateway(CFG, cache_dir=tmp_path / "one" / "cache", log_path=tmp_path / "two" / f"{path}.jsonl", transport=Boom(), env={}, run_id=path)
 
-def test_fainter_point_is_not_an_outburst():
-    # Larger magnitude means fainter. A mag-14 point must not pass.
-    y, m, r = _curve([1920, 1930, 1940, 1946.1], [10.0, 10.1, 9.9, 14.0])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert not res["passed"]
-    assert res["points"][0]["brighter_by"] < 0
+    second = S.run_paths(pk, again)
+    for name in ("nooa", "fallback"):
+        assert [r["argument"] for r in second["paths"][name]["rows"]] == [r["argument"] for r in first["paths"][name]["rows"]]
+        assert second["paths"][name]["cost_usd"] == 0.0 and second["paths"][name]["cache_hits"] == second["paths"][name]["calls"] > 0
 
 
-def test_margin_boundary_is_inclusive():
-    y, m, r = _curve([1920, 1930, 1946.5], [10.0, 10.0, 8.0])
-    assert spike.tcrb_outburst_check(y, m, r, margin=2.0)["passed"]
-    assert not spike.tcrb_outburst_check(y, m, r, margin=2.01)["passed"]
+def test_packets_round_trip_through_files_so_the_fixtures_rebuild_the_same_request(tmp_path):
+    pk = packets(2)
+    S.save_packets(pk, tmp_path / "p")
+    back = S.load_packets(tmp_path / "p")
+    assert sorted(b.candidate_id for b in back) == sorted(p.candidate_id for p in pk)
+    by_id = {b.candidate_id: b for b in back}
+    for p in pk:
+        assert P.render(by_id[p.candidate_id]) == P.render(p)
 
 
-@pytest.mark.parametrize(
-    ("event_year", "expected"),
-    [(1945.999, False), (1946.0, True), (1946.999, True), (1947.0, False)],
-)
-def test_only_1946_counts(event_year, expected):
-    y, m, r = _curve([1920, 1930, event_year], [10.0, 10.0, 5.0])
-    assert spike.tcrb_outburst_check(y, m, r)["passed"] is expected
+def test_fixtures_copy_exactly_the_cache_entries_a_run_used(tmp_path):
+    r = factory(tmp_path / "run", Fake(ok(GOOD, cost=0.001)))
+    S.run_paths(packets(2), r, paths=("fallback",))
+    other = tmp_path / "run" / "cache" / "zz"
+    other.mkdir(parents=True)
+    (other / ("zz" + "0" * 62 + ".json")).write_text("{}")  # an entry from some other run
+    n = S.write_fixtures(tmp_path / "run" / "cache", [tmp_path / "run" / "fallback.jsonl"], tmp_path / "fx")
+    assert n == 2 and len(list((tmp_path / "fx").rglob("*.json"))) == 2
 
 
-def test_baseline_excludes_1946_and_pre_1900():
-    # A bright 1946 point and a bright 1890 point must not pull the baseline up.
-    y, m, r = _curve([1890, 1920, 1930, 1946.2], [5.0, 10.0, 10.0, 5.0])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert res["baseline_median"] == pytest.approx(10.0)
-    assert res["n_baseline"] == 2
+def test_the_report_text_names_each_path_and_its_cost(tmp_path):
+    text = S.format_report(S.run_paths(packets(2), factory(tmp_path, Fake(ok(GOOD, cost=0.001)))))
+    assert "nooa: 2 of 2 valid" in text and "fallback: 2 of 2 valid" in text and "cap" in text
 
 
-def test_non_detections_never_count():
-    y, m, r = _curve([1920, 1930, 1946.2], [10.0, 10.0, NAN])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert not res["passed"]
-    assert res["n_in_1946"] == 0
+def test_a_planted_key_appears_in_no_file_a_run_writes_on_either_path(tmp_path, monkeypatch):
+    secret = "sk" + "-or-PLANTED-SECRET-98765"  # built at runtime so the secret scan does not flag the test
+    monkeypatch.setenv(L.KEY_VAR, secret)
+    seen = []
 
+    class Spy(Fake):
+        def post(self, url, headers, payload, timeout):
+            seen.append(headers["Authorization"])
+            return super().post(url, headers, payload, timeout)
 
-def test_rejected_points_are_excluded():
-    y, m, r = _curve([1920, 1930, 1946.2], [10.0, 10.0, 5.0], reject=[0, 0, 1])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert not res["passed"]
-    # The same curve with nothing rejected passes: this is the R5.2 raw-vs-cleaned case.
-    assert spike.tcrb_outburst_check(y, m, np.zeros(3, dtype=int))["passed"]
+    def gateway_for(path):
+        return L.Gateway(CFG, cache_dir=tmp_path / "cache", log_path=tmp_path / f"{path}.jsonl", transport=Spy(ok(GOOD, cost=0.001)), run_id=path)
 
+    r = S.run_paths(packets(2), gateway_for)
+    assert seen and all(h == f"Bearer {secret}" for h in seen)  # the real key reaches the provider call, and only there
+    files = [f for f in tmp_path.rglob("*") if f.is_file()]
+    assert files and not [f for f in files if secret in f.read_text()]
+    assert secret not in json.dumps(r)
 
-def test_no_baseline_fails_with_reason():
-    y, m, r = _curve([1946.2], [5.0])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert not res["passed"]
-    assert "1900" in res["reason"]
 
+def test_the_crew_command_refuses_without_a_key_and_says_which_variable(monkeypatch, capsys, tmp_path):
+    from computers.cli import main
 
-def test_no_1946_points_fails_with_reason():
-    y, m, r = _curve([1920, 1930], [10.0, 10.0])
-    res = spike.tcrb_outburst_check(y, m, r)
-    assert not res["passed"]
-    assert "1946" in res["reason"]
-
-
-@given(
-    base=st.floats(min_value=5, max_value=15),
-    delta=st.floats(min_value=-5, max_value=5),
-)
-def test_direction_property(base, delta):
-    """A 1946 point `delta` mags brighter passes exactly when delta >= margin."""
-    y, m, r = _curve([1920, 1930, 1946.5], [base, base, base - delta])
-    res = spike.tcrb_outburst_check(y, m, r, margin=2.0)
-    assert res["passed"] == (res["points"][0]["brighter_by"] >= 2.0)
-
-
-# ------------------------------------------------------------------- summarize
-
-
-def test_summarize_counts():
-    y = np.array([1900, 1910, 1920, 1930.0])
-    m = np.array([10.0, NAN, 11.0, 12.0])
-    series = ["a", "a", "b", "a"]
-    r_std = np.array([0, 0, 1, 0])
-    r_ext = np.array([0, 0, 1, 2])
-    s = spike.summarize(y, m, series, r_std, r_ext)
-    assert s["rows"] == 4
-    assert s["detections"] == 3
-    assert s["non_detections"] == 1
-    assert s["series"] == {"a": 3, "b": 1}
-    assert s["rejected_standard"] == 1
-    assert s["rejected_after_extra"] == 2
-    assert s["good_detections_standard"] == 2
-    assert s["good_detections_after_extra"] == 1
-    assert s["median_detected_mag"] == pytest.approx(11.0)
-    assert (s["first_year"], s["last_year"]) == (1900.0, 1930.0)
-
-
-def test_summarize_rejects_inconsistent_stages():
-    with pytest.raises(ValueError, match="stay rejected"):
-        spike.summarize([1900.0], [10.0], ["a"], np.array([1]), np.array([0]))
-
-
-def test_summarize_length_mismatch():
-    with pytest.raises(ValueError, match="same length"):
-        spike.summarize([1900.0, 1901.0], [10.0], ["a"], np.array([0]), np.array([0]))
-
-
-def test_summarize_empty_and_all_non_detections():
-    s = spike.summarize([], [], [], np.array([], dtype=int), np.array([], dtype=int))
-    assert s["rows"] == 0
-    assert s["median_detected_mag"] is None
-    s2 = spike.summarize([1900.0], [NAN], ["a"], np.array([0]), np.array([0]))
-    assert s2["detections"] == 0
-    assert s2["median_detected_mag"] is None
-
-
-# ------------------------------------------------------------------ separation
-
-
-def test_separation_known_values():
-    # One arcsecond in declination.
-    sep = spike.angular_separation_arcsec(10.0, 20.0, 10.0, 20.0 + 1 / 3600)
-    assert float(sep) == pytest.approx(1.0, rel=1e-6)
-    # RA offsets shrink with cos(dec).
-    sep = spike.angular_separation_arcsec(10.0, 60.0, 10.0 + 1 / 3600, 60.0)
-    assert float(sep) == pytest.approx(0.5, rel=1e-4)
-
-
-def test_separation_report_orders_and_warns():
-    ra = np.array([100.0, 100.0, 100.0, 100.0])
-    dec = np.array([20.01, 20.0005, 20.002, 20.0])
-    rep = spike.separation_report(ra, dec, 100.0, 20.0)
-    assert [n["index"] for n in rep["nearest"]] == [3, 1, 2]
-    assert not rep["warn"]
-    far = spike.separation_report(ra[:1], dec[:1], 100.0, 20.0)
-    assert far["warn"]  # 36 arcsec away
-    assert spike.separation_report([], [], 0.0, 0.0)["warn"]
-
-
-def test_separation_report_ties_are_deterministic():
-    ra = np.array([10.0, 10.0, 10.0])
-    dec = np.array([5.001, 5.001, 5.001])
-    rep = spike.separation_report(ra, dec, 10.0, 5.0)
-    assert [n["index"] for n in rep["nearest"]] == [0, 1, 2]
-
-
-# ------------------------------------------------------------------ quiet star
-
-
-def _cand(ref, b, sep, n):
-    return {"ref_number": ref, "b_mag": b, "sep_arcmin": sep, "n_detections": n}
-
-
-def test_shortlist_filters_and_keeps_top_quartile():
-    cands = [
-        _cand(1, 12.0, 10, 100),
-        _cand(2, 12.0, 10, 200),
-        _cand(3, 12.0, 10, 300),
-        _cand(4, 12.0, 10, 400),
-        _cand(5, 10.0, 10, 999),  # too bright
-        _cand(6, 14.0, 10, 999),  # too faint
-        _cand(7, 12.0, 1.0, 999),  # too close to the target
-        _cand(8, None, 10, 999),  # no B magnitude
-    ]
-    short = spike.quiet_star_shortlist(cands)
-    # 75th percentile of 100,200,300,400 is 325, so only ref 4 stays.
-    assert [c["ref_number"] for c in short] == [4]
-
-
-def test_shortlist_empty():
-    assert spike.quiet_star_shortlist([]) == []
-    assert spike.quiet_star_shortlist([_cand(1, 20.0, 10, 5)]) == []
-
-
-def test_pick_quiet_star_needs_plain_star_type():
-    short = [_cand(30, 12, 10, 5), _cand(10, 12, 10, 5), _cand(20, 12, 10, 5), _cand(40, 12, 10, 5)]
-    otypes = {10: "V*", 20: "*", 30: "PM*", 40: None}
-    pick = spike.pick_quiet_star(short, otypes)
-    assert pick["chosen"]["ref_number"] == 20
-    assert [a["ref_number"] for a in pick["alternates"]] == [30]
-
-
-def test_pick_quiet_star_none_when_all_variable():
-    assert spike.pick_quiet_star([_cand(1, 12, 10, 5)], {1: "EB*"}) is None
-    assert spike.pick_quiet_star([_cand(1, 12, 10, 5)], {}) is None
-
-
-def test_pick_quiet_star_is_order_independent():
-    short = [_cand(3, 12, 10, 5), _cand(1, 12, 10, 5), _cand(2, 12, 10, 5)]
-    otypes = {1: "*", 2: "*", 3: "*"}
-    a = spike.pick_quiet_star(short, otypes)
-    b = spike.pick_quiet_star(list(reversed(short)), otypes)
-    assert a == b
-    assert a["chosen"]["ref_number"] == 1
-
-
-# --------------------------------------------------------------- cutout offset
-
-
-def test_cutout_offset_centre_of_835_pixels():
-    # Pixel 417 is the exact centre of an 835-pixel axis.
-    off = spike.cutout_offset(417, 417, (835, 835))
-    assert off == {"dx": 0.0, "dy": 0.0, "radius": 0.0}
-
-
-def test_cutout_offset_values_and_axes():
-    off = spike.cutout_offset(420, 410, (835, 835))
-    assert off["dx"] == 3 and off["dy"] == -7
-    assert off["radius"] == pytest.approx(np.hypot(3, 7))
-    # shape is (ny, nx): x pairs with the second entry.
-    off = spike.cutout_offset(10, 0, (5, 21))
-    assert off == {"dx": 0.0, "dy": -2.0, "radius": 2.0}
-
-
-# --------------------------------------------------------------------- timing
-
-
-def test_timing_stats_ignores_failed_requests_for_median():
-    recs = [
-        {"seconds": 1.0, "ok": True},
-        {"seconds": 3.0, "ok": True},
-        {"seconds": 0.1, "ok": False},
-        {"seconds": 2.0, "ok": True},
-    ]
-    st_ = spike.timing_stats(recs)
-    assert st_ == {"n": 4, "n_failed": 1, "median_seconds": 2.0, "max_seconds": 3.0}
-
-
-def test_timing_stats_all_failed():
-    st_ = spike.timing_stats([{"seconds": 0.5, "ok": False}])
-    assert st_["median_seconds"] is None and st_["n_failed"] == 1
-    assert spike.timing_stats([])["n"] == 0
+    monkeypatch.delenv(L.KEY_VAR, raising=False)
+    assert main(["crew", "spike", "--data-dir", str(tmp_path)]) == 1
+    out = capsys.readouterr().out
+    assert L.KEY_VAR in out and "sk-" not in out

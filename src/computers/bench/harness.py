@@ -1,7 +1,8 @@
 """Run a detector over planted signals and un-injected hosts (plan 10.2 to 10.4).
 
 A detector is any callable `(time_jd, mag, limit_mag) -> bool`, where `mag` is NaN for a
-non-detection. A planted signal counts as recovered when the detector flags the injected
+non-detection. A detector with `takes_host = True` is called `(host, mag, limit_mag)` instead,
+so it can use the host's cleaned `Curve` (the L1 detector does). A planted signal counts as recovered when the detector flags the injected
 curve and did not already flag the host without it: a host that raises an alarm on its
 own noise would otherwise be credited with every signal. Detectors that report an epoch
 will tighten this when the real triggers arrive (Sprint 4).
@@ -16,10 +17,11 @@ import numpy as np
 
 from computers.bench.inject import SignalSpec, inject
 from computers.bench.metrics import Outcome, Rate, false_alarm_rate
+from computers.l1.curve import Curve
 
 __all__ = ["Detector", "HostCurve", "false_alarms", "run_injections"]
 
-Detector = Callable[[np.ndarray, np.ndarray, np.ndarray], bool]
+Detector = Callable[..., bool]
 
 
 @dataclass(frozen=True)
@@ -28,6 +30,13 @@ class HostCurve:
     time: np.ndarray  # HJD days, ascending
     mag: np.ndarray  # NaN marks a non-detection
     limit: np.ndarray
+    curve: Curve | None = None  # the cleaned curve these arrays came from, for L1 detectors
+
+
+def _call(detector: Detector, host: HostCurve, mag: np.ndarray) -> bool:
+    if getattr(detector, "takes_host", False):
+        return bool(detector(host, mag, host.limit))
+    return bool(detector(host.time, mag, host.limit))
 
 
 def run_injections(
@@ -39,8 +48,8 @@ def run_injections(
     for spec in specs:
         host = hosts[spec.host_id]
         if host.host_id not in baseline:
-            baseline[host.host_id] = bool(detector(host.time, host.mag, host.limit))
-        flagged = bool(detector(host.time, inject(host.time, host.mag, host.limit, spec.signal).mag, host.limit))
+            baseline[host.host_id] = _call(detector, host, host.mag)
+        flagged = _call(detector, host, inject(host.time, host.mag, host.limit, spec.signal).mag)
         out.append(
             Outcome(
                 spec.host_id,
@@ -56,5 +65,5 @@ def run_injections(
 
 def false_alarms(hosts: Mapping[int, HostCurve], detector: Detector) -> Rate:
     """How many un-injected constant hosts the detector flags."""
-    flagged = sum(bool(detector(h.time, h.mag, h.limit)) for h in hosts.values())
+    flagged = sum(_call(detector, h, h.mag) for h in hosts.values())
     return false_alarm_rate(flagged, len(hosts))

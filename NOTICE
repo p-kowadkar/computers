@@ -9,6 +9,8 @@ with their licences. Verify each entry against the pinned version before a relea
 
 Software (compatible with AGPL-3.0)
   daschlab         MIT          https://github.com/pkgw/daschlab
+                   The series table in src/computers/data/series.py is copied from daschlab 1.1.0
+                   (copyright the DASCH/daschlab developers, MIT licence).
   NOOA             Apache-2.0   https://github.com/NVIDIA-NeMo/labs-OO-Agents   (from Sprint 8)
 
 Data

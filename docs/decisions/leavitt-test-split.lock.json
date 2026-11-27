@@ -1,0 +1,10 @@
+{
+  "decision": "docs/decisions/0005-leavitt-set-v0.md",
+  "excluded_plates": 3382,
+  "sha256": "67758fff157a6ab5824dba7f198c3a4fef2581c95386d92bbab339492afcf1c5",
+  "stars": 1058,
+  "tiles": [
+    "tabby"
+  ],
+  "version": "v0"
+}

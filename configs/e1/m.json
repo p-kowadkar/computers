@@ -1,0 +1,17 @@
+{
+  "run_name": "e1-m",
+  "train_tiles": ["m44"],
+  "eval_tiles": ["tcrb"],
+  "seed": 0,
+  "batch_size": 64,
+  "draws_per_star": 20,
+  "epochs": 60,
+  "lr": 0.001,
+  "weight_decay": 0.01,
+  "warmup_epochs": 2,
+  "patience": 10,
+  "val_fraction": 0.1,
+  "device": "auto",
+  "data_dir": "data",
+  "model": {"d_model": 128, "n_layers": 4, "n_heads": 4, "n_dec_layers": 2, "dropout": 0.1}
+}

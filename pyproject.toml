@@ -13,17 +13,29 @@ dependencies = [
     "numpy>=2.5.5",
     "pyarrow>=26.0.1",
     "requests>=2.34.2",
+    "scikit-learn==1.9.1",
 ]
 
 [project.scripts]
 computers = "computers.cli:main"
 
 [dependency-groups]
+crew = [
+    "httpx==0.29.0",
+    "nooa==0.0.12",
+    "pydantic==2.14.4",
+]
 dev = [
     "hypothesis>=6.100",
     "pre-commit>=4.0",
     "pytest>=8.0",
     "ruff>=0.8",
+]
+mcp = [
+    "mcp==1.30.0",
+]
+ml = [
+    "torch==2.15.0",
 ]
 spike = [
     "astropy>=8.0.3",
@@ -40,9 +52,10 @@ build-backend = "uv_build"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra -m 'not network'"
+addopts = "-ra -m 'not network and not slow'"
 markers = [
     "network: needs the DASCH API or other network access (excluded by default; run with -m network)",
+    "slow: takes several seconds on the real local data (excluded by default; run with -m slow)",
 ]
 
 [tool.ruff]

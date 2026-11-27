@@ -11,6 +11,42 @@
     "decision": "docs/decisions/0002-initial-thresholds.md",
     "value": 15.0
   },
+  "blend_max_diff_mag": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 0.3
+  },
+  "budget_per_tile": {
+    "decision": "docs/decisions/0008-l2-ranker.md",
+    "value": 20.0
+  },
+  "budget_total": {
+    "decision": "docs/decisions/0008-l2-ranker.md",
+    "value": 60.0
+  },
+  "colorterm_blue_min": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": -0.53
+  },
+  "comparison_colour_window": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 0.25
+  },
+  "comparison_mag_window": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 0.5
+  },
+  "comparison_max": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 40.0
+  },
+  "comparison_min": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 10.0
+  },
+  "comparison_min_per_plate": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 5.0
+  },
   "constant_min_good_points": {
     "decision": "docs/decisions/0005-leavitt-set-v0.md",
     "value": 200.0
@@ -19,9 +55,41 @@
     "decision": "docs/decisions/0005-leavitt-set-v0.md",
     "value": 1.5
   },
+  "deep_limit_margin_mag": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 1.0
+  },
+  "dip_max_years": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 20.0
+  },
+  "dip_min_points": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 3.0
+  },
+  "disappearance_min_plates": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 10.0
+  },
+  "disappearance_min_series": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 2.0
+  },
   "fade_floor_mag_per_century": {
     "decision": "docs/decisions/0005-leavitt-set-v0.md",
     "value": 0.3
+  },
+  "l2_filter_min_gain_points": {
+    "decision": "docs/decisions/0008-l2-ranker.md",
+    "value": 3.0
+  },
+  "llm_cap_run_usd": {
+    "decision": "docs/decisions/0010-crew-gateway.md",
+    "value": 2.0
+  },
+  "long_term_min_decades": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 4.0
   },
   "menzel_gap_end_year": {
     "decision": "docs/decisions/0005-leavitt-set-v0.md",
@@ -31,9 +99,69 @@
     "decision": "docs/decisions/0005-leavitt-set-v0.md",
     "value": 1953.0
   },
+  "min_good_points": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 50.0
+  },
+  "outburst_min_points": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 2.0
+  },
+  "outburst_sigma": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 5.0
+  },
+  "outburst_single_point_mag": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 2.0
+  },
+  "outburst_window_days": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 60.0
+  },
+  "recovery_tolerance_dip_years": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 1.0
+  },
+  "recovery_tolerance_outburst_days": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 60.0
+  },
+  "recovery_tolerance_step_years": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 5.0
+  },
+  "return_points": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 5.0
+  },
+  "return_recovery": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 0.25
+  },
+  "seam_min_points": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 20.0
+  },
+  "series_change_share": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 0.5
+  },
+  "shape_outlier_sigma": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 3.0
+  },
+  "source_split_overlap_max": {
+    "decision": "docs/decisions/0006-l1-cleaning-and-detrending.md",
+    "value": 0.1
+  },
   "source_split_radius_arcsec": {
     "decision": "docs/decisions/0002-initial-thresholds.md",
     "value": 5.0
+  },
+  "trigger_min_series": {
+    "decision": "docs/decisions/0007-l1-trigger-thresholds.md",
+    "value": 2.0
   },
   "vsx_exclude_radius_arcsec": {
     "decision": "docs/decisions/0005-leavitt-set-v0.md",

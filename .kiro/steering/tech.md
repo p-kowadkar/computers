@@ -9,7 +9,7 @@ inclusion: always
 - **Python 3.12**, managed with **uv**. Lint and format with **ruff**. Tests with **pytest** and **Hypothesis**.
 - Core libraries: `numpy`, `pyarrow` (schemas, Parquet), `requests`. DuckDB arrives with the first task that queries tables.
 - `daschlab` (MIT) is pinned to an exact version in the `spike` dependency group. It is the reference the thin client is tested against, not a runtime dependency of the pipeline.
-- Agents run on **NOOA** (Apache-2.0), pinned, and imported in exactly one place (Sprint 8). Everything else is plain Python.
+- Agents run on **NOOA** (Apache-2.0, 0.0.12, pinned in the `crew` group) and are imported in exactly one module, `crew/base.py`, which also holds the in-house fallback base. A test enforces it. Everything else is plain Python.
 - LLM calls go through OpenRouter, wrapped by our own client that logs tokens and cost and caches every response.
 - Storage: committed manifests plus `aws s3 sync` for the data. No DVC.
 
@@ -18,6 +18,10 @@ inclusion: always
 ```bash
 uv sync                                  # core + dev
 uv sync --group spike                    # adds daschlab, astropy, matplotlib, astroquery
+uv sync --group ml                       # adds PyTorch (E1 training)
+uv sync --group crew                     # adds NOOA, pydantic, httpx (the crew)
+uv sync --group mcp                      # adds the MCP SDK (the servers)
+docker run --rm --network none computers-crew   # the fast suite in the container
 uv run pytest                            # fast suite (network tests are excluded)
 uv run pytest -m network                 # tests that need the network
 uv run ruff check
@@ -54,3 +58,12 @@ Kiro command hooks on file save cannot fail loudly, so the real enforcement is t
 - Type hints on public functions. Docstrings say what and why, not how.
 - Commit messages say what changed and why. Do not skip pre-commit hooks.
 - Prose in docs: plain, specific, no filler. Numbers carry units.
+
+## The crew gateway (Sprint 8)
+
+- **Every model call goes through `crew/llm.py`** (`Gateway.complete`). It pins the provider with `allow_fallbacks: false`, uses temperature 0, caches every successful response by model, provider and request, logs one row per call (no prompt text, no key) and stops at `llm_cap_run_usd`.
+- **NOOA reaches the model through a local shim** (`Shim`, 127.0.0.1) that answers from the gateway, so the cache, price log and cap apply to NOOA as well. NOOA is given a placeholder key. The real key lives only in the gateway's environment.
+- **NOOA retries a bad structured reply up to 10 times by default,** and each retry is a paid call. The crew sets `PredictConfig(max_retries=2, temperature=0)` (`base.PREDICT`).
+- **The NOOA trace viewer binds to all interfaces** (0.0.0.0:5001) and keeps traces in `~/.config/nooa/traces.db`. Start it only when you need it, on a trusted network, and stop it after. Cost figures come from our gateway, not from traces.
+- **MCP:** the SDK is 1.30 (`FastMCP`). Version 2 renamed it and NOOA's MCP extra needs `<2`.
+

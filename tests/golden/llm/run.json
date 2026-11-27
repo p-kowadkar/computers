@@ -1,0 +1,28 @@
+{
+ "what": "The first live run of `computers crew spike` (Sprint 8, 2026-11-27). Cache entries are in the two-letter folders, the packets in packets/, the arguments it produced in expected.json.",
+ "model": {
+  "model": "anthropic/claude-haiku-5.5",
+  "provider": "anthropic",
+  "price_in_per_m": 0.1,
+  "price_out_per_m": 0.5,
+  "max_tokens": 1500,
+  "reasoning": null
+ },
+ "note": "max_tokens was 1500 in this run. 3 of 12 fallback replies reached it (one was empty), which is why the fallback path has 9 of 10. The code default is now 4000, so a new run writes new cache keys.",
+ "result": {
+  "nooa": {
+   "valid": 10,
+   "of": 10,
+   "tokens_in": 60992,
+   "tokens_out": 6921,
+   "calls": 10
+  },
+  "fallback": {
+   "valid": 9,
+   "of": 10,
+   "tokens_in": 59918,
+   "tokens_out": 11643,
+   "calls": 12
+  }
+ }
+}

@@ -14,9 +14,15 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 SRC = ROOT / "src" / "computers"
 
-BELOW_L3 = ("data", "l1", "l2", "bench", "telemetry")
+BELOW_L3 = ("data", "l1", "l2", "bench", "telemetry", "ml", "mcp")
 LLM_PACKAGES = {"nooa", "litellm", "openai", "anthropic"}
 L1_FORBIDDEN_INTERNAL = {"computers.l2", "computers.crew"}
+MCP_FORBIDDEN_INTERNAL = {
+    "computers.l1", "computers.l2", "computers.bench", "computers.crew", "computers.cli", "computers.ml",
+}  # mcp servers read the local data tables only
+CREW_FRAMEWORK_MODULE = "crew/base.py"  # the one module that may import an agent framework or an LLM client
+ML_FORBIDDEN_INTERNAL = {"computers.l2", "computers.crew", "computers.cli", "computers.mcp", "computers.bench"}
+L2_FORBIDDEN_INTERNAL = {"computers.crew", "computers.cli", "computers.mcp", "computers.bench"}
 # structure.md: data is the base, and bench scores the layers below the crew.
 BENCH_FORBIDDEN_INTERNAL = {"computers.crew", "computers.cli", "computers.mcp", "computers.ml"}
 DATA_FORBIDDEN_INTERNAL = {
@@ -73,10 +79,25 @@ def violations(src_root: Path) -> list[str]:
                     mod == bad or mod.startswith(bad + ".") for bad in L1_FORBIDDEN_INTERNAL
                 ):
                     out.append(f"{rel}: imports {mod}; L1 must not depend on L2 or the crew")
+                if layer == "l2" and _hits(mod, L2_FORBIDDEN_INTERNAL):
+                    out.append(f"{rel}: imports {mod}; L2 may import data and l1 only")
+                if layer == "mcp" and _hits(mod, MCP_FORBIDDEN_INTERNAL):
+                    out.append(f"{rel}: imports {mod}; mcp may import data only")
+                if layer == "ml" and _hits(mod, ML_FORBIDDEN_INTERNAL):
+                    out.append(f"{rel}: imports {mod}; ml may import data and l1 only")
                 if layer == "bench" and _hits(mod, BENCH_FORBIDDEN_INTERNAL):
                     out.append(f"{rel}: imports {mod}; bench may import data, l1 and l2 only")
                 if layer == "data" and _hits(mod, DATA_FORBIDDEN_INTERNAL):
                     out.append(f"{rel}: imports {mod}; data is the base layer and imports nothing above it")
+    crew = src_root / "crew"
+    if crew.is_dir():
+        for path in sorted(crew.rglob("*.py")):
+            rel = path.relative_to(src_root).as_posix()
+            if rel == CREW_FRAMEWORK_MODULE:
+                continue
+            for mod in sorted(imported_modules(path, package_of(path, src_root))):
+                if mod.split(".")[0] in LLM_PACKAGES:
+                    out.append(f"{rel}: imports {mod}; only {CREW_FRAMEWORK_MODULE} may import an agent framework or LLM client")
     return out
 
 
@@ -125,7 +146,7 @@ def test_llm_imports_are_flagged_in_every_lower_layer(tmp_path, layer, statement
 
 
 def test_crew_is_allowed_to_import_an_agent_framework(tmp_path):
-    src = make_tree(tmp_path, {"crew/maury.py": "from nooa import Agent\n"})
+    src = make_tree(tmp_path, {"crew/base.py": "from nooa import Agent\n"})
     assert violations(src) == []
 
 
@@ -219,3 +240,48 @@ def test_data_importing_anything_above_it_is_flagged(tmp_path, statement):
 def test_data_may_import_the_thresholds_registry(tmp_path):
     src = make_tree(tmp_path, {"data/mod.py": "from computers.thresholds import THRESHOLDS\nfrom computers.data import silver\n"})
     assert violations(src) == []
+
+
+@pytest.mark.parametrize("statement", ["from computers.crew import x", "import computers.bench.run", "from computers import cli"])
+def test_l2_may_not_import_the_crew_the_cli_or_the_bench(tmp_path, statement):
+    src = make_tree(tmp_path, {"l2/mod.py": statement + "\n"})
+    found = violations(src)
+    assert found and "L2 may import data and l1 only" in found[0]
+
+
+def test_l2_may_import_l1_and_data_and_sklearn(tmp_path):
+    src = make_tree(tmp_path, {"l2/mod.py": "from computers.l1 import triggers\nfrom computers.data import schemas\nimport sklearn\n"})
+    assert violations(src) == []
+
+
+@pytest.mark.parametrize("statement", ["from computers.l2 import ranker", "import computers.bench.run", "from computers.crew import x", "from computers import cli"])
+def test_ml_may_not_import_l2_the_bench_the_crew_or_the_cli(tmp_path, statement):
+    src = make_tree(tmp_path, {"ml/mod.py": statement + "\n"})
+    found = violations(src)
+    assert found and "ml may import data and l1 only" in found[0]
+
+
+def test_ml_may_import_data_l1_numpy_and_torch(tmp_path):
+    src = make_tree(tmp_path, {"ml/mod.py": "import torch\nimport numpy\nfrom computers.l1 import curve\nfrom computers.data import schemas\n"})
+    assert violations(src) == []
+
+
+@pytest.mark.parametrize("statement", ["from computers.l1 import triggers", "import computers.crew.llm", "from computers.ml import sequences", "from computers import cli"])
+def test_mcp_may_import_data_only(tmp_path, statement):
+    src = make_tree(tmp_path, {"mcp/mod.py": statement + "\n"})
+    found = violations(src)
+    assert found and "mcp may import data only" in found[0]
+
+
+def test_mcp_may_import_data_and_the_sdk(tmp_path):
+    src = make_tree(tmp_path, {"mcp/mod.py": "from mcp.server.fastmcp import FastMCP\nfrom computers.data import silver\n"})
+    assert violations(src) == []
+
+
+@pytest.mark.parametrize("statement", ["import nooa", "from nooa import Agent", "import litellm", "from openai import OpenAI"])
+def test_only_crew_base_may_import_a_framework_inside_crew(tmp_path, statement):
+    ok = make_tree(tmp_path, {"crew/base.py": statement + "\n"})
+    assert violations(ok) == []
+    bad = make_tree(tmp_path / "x", {"crew/base.py": "x = 1\n", "crew/maury.py": statement + "\n"})
+    found = violations(bad)
+    assert found and "only crew/base.py may import" in found[0]

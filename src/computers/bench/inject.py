@@ -27,6 +27,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from computers.data.timeconv import DAYS_PER_YEAR, jd_to_year
 from computers.thresholds import THRESHOLDS
 
 __all__ = [
@@ -54,13 +55,6 @@ OUTBURST_TAU_DAYS = (3.0, 120.0)  # e-folding times; "decay from days to months"
 WAVE_PERIOD_YEARS = (10.0, 100.0)
 DIP_TAPER = 0.25  # fraction of the dip's duration spent on each cosine edge
 STEP_IN_GAP_FRACTION = 1 / 3  # share of steps whose epoch is placed inside the Menzel Gap
-DAYS_PER_YEAR = 365.25
-
-
-def jd_to_year(jd: np.ndarray | float) -> np.ndarray | float:
-    """Decimal year from a Julian date (J2000 is JD 2451545.0 and year 2000.0)."""
-    return 2000.0 + (np.asarray(jd, dtype=float) - 2451545.0) / DAYS_PER_YEAR
-
 
 # ------------------------------------------------------------------------ signals
 

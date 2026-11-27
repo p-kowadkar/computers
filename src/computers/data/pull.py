@@ -35,6 +35,7 @@ from computers.data import schemas, silver
 from computers.data.dasch_client import DaschClient, DaschError, HttpError, RetriesExhausted
 from computers.data.snapshot import SnapshotStore
 from computers.data.tiles import TILES, Tile, catalog_boxes, exposure_positions, in_tile
+from computers.thresholds import THRESHOLDS
 
 __all__ = [
     "BRIGHT_LIMIT_B",
@@ -52,11 +53,12 @@ __all__ = [
 ]
 
 BRIGHT_LIMIT_B = 13.5  # [start] Johnson B, plan 3.4
-STAGES = ("catalog", "exposures", "lightcurves")
+STAGES = ("catalog", "exposures", "lightcurves", "neighbours")
 PILOT_SEED = 20261124
 MAX_SPLIT_DEPTH = 3
 EPOCH_START = dt.datetime(1880, 1, 1, tzinfo=dt.UTC)
 EPOCH_END = dt.datetime(1991, 1, 1, tzinfo=dt.UTC)
+NEIGHBOUR_MAX_B = 30.0  # any finite magnitude
 MAX_WORKERS = 4  # threads; the client's gate decides how many requests actually run at once
 
 
@@ -79,6 +81,7 @@ class CatalogResult:
     n_with_magnitude: int
     n_bright: int
     bright_bins: dict[str, int]  # upper edge of each 0.5 mag bin (low, high] -> count, B <= limit
+    catalog: pa.Table | None = None  # every source in the tile, for the neighbours stage
 
 
 def magnitude_bins(mags: np.ndarray, limit: float = BRIGHT_LIMIT_B, step: float = 0.5) -> dict[str, int]:
@@ -135,7 +138,35 @@ def pull_catalog(client: DaschClient, tile: Tile, *, max_b: float = BRIGHT_LIMIT
         n_with_magnitude=int(np.isfinite(mags).sum()),
         n_bright=stars.num_rows,
         bright_bins=magnitude_bins(mags, max_b),
+        catalog=catalog,
     )
+
+
+# -------------------------------------------------------------------- neighbours
+
+
+def neighbour_sources(
+    catalog: pa.Table, patrol: pa.Table, tile: Tile, radius_arcsec: float
+) -> pa.Table:
+    """Catalog sources within `radius_arcsec` of a patrol star, as a `stars`-shaped table.
+
+    These are the sources that can split a star's detections between two catalog entries
+    (plan 6.1 step 1). A neighbour that is itself a patrol star is returned too, because
+    the merge needs it, and the caller decides what is still to be pulled. Sources with no
+    magnitude cannot be kept in a `stars` table and are left out.
+    """
+    ra = catalog.column("ra_deg").to_numpy().astype(float)
+    dec = catalog.column("dec_deg").to_numpy().astype(float)
+    refs = catalog.column("ref_number").to_numpy()
+    p_ra = patrol.column("ra_deg").to_numpy().astype(float)
+    p_dec = patrol.column("dec_deg").to_numpy().astype(float)
+    p_ref = patrol.column("ref_number").to_numpy()
+    near = np.zeros(len(ra), dtype=bool)
+    for i in range(len(p_ra)):
+        dra = (ra - p_ra[i] + 180.0) % 360.0 - 180.0
+        sep = np.hypot(dra * math.cos(math.radians(p_dec[i])), dec - p_dec[i]) * 3600.0
+        near |= (sep <= radius_arcsec) & (refs != p_ref[i])
+    return P.stars_from_catalog(catalog.filter(pa.array(near)), tile, max_b=NEIGHBOUR_MAX_B)
 
 
 # ---------------------------------------------------------------------- exposures
@@ -472,6 +503,34 @@ def run_pull(
                     )  # fmt: skip
                     report["lightcurves"]["file"] = str(path)
                     say(f"   measurements: {lcs.n_rows} rows written")
+            if "neighbours" in stages:
+                stars_path = silver.silver_path(data_dir, "stars", name)
+                if not stars_path.exists():
+                    raise StageError(f"no stars table for {name}: run the catalog stage first")
+                patrol = silver.read_table(stars_path)
+                cat = pull_catalog(client, tile)  # a stored answer: no new request
+                radius = THRESHOLDS["source_split_radius_arcsec"].value
+                found = neighbour_sources(cat.catalog, patrol, tile, radius)
+                label = f"{name}-neighbours"
+                found = found.set_column(
+                    found.schema.get_field_index("tile"),
+                    found.schema.field("tile"),
+                    pa.array([label] * found.num_rows, type=pa.string()),
+                )
+                say(f"   neighbours: {found.num_rows} sources within {radius:g} arcsec of {patrol.num_rows} patrol stars")
+                nb = pull_lightcurves(client, found, label, progress=lambda m: say("   " + m))
+                report["neighbours"] = {"sources": found.num_rows, "failed": len(nb.failures), "rows": nb.n_rows}
+                if nb.failures:
+                    exit_code = 1
+                    say(f"   {len(nb.failures)} neighbours failed; nothing written. Run again to retry them.")
+                else:
+                    digest = store.digest()
+                    silver.write_table("stars", found, silver.silver_path(data_dir, "stars", label), snapshot_digest=digest)
+                    silver.write_table(
+                        "measurements", nb.table, silver.silver_path(data_dir, "measurements", label),
+                        snapshot_digest=digest,
+                    )  # fmt: skip
+                    say(f"   neighbours: {nb.n_rows} measurement rows written")
         except StageError as exc:
             exit_code = 1
             report["failures"].append({"stage_error": str(exc)})

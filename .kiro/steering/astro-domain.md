@@ -58,6 +58,40 @@ Amplitude floors (starting values, in `thresholds.py`): 0.5 mag for long-term ev
 - **Response size.** The API's buffered responses cap at 6 MB. A lightcurve of 2,900 rows is 1.1 MB. `queryexps` for 16,000 exposures is 2.9 MB.
 - **Mirrors.** The Strasbourg SIMBAD and VizieR servers were down on 2026-11-23. Catalog clients take a list of servers and fall back to `simbad.harvard.edu` and `vizier.cfa.harvard.edu`.
 
+## Sprint 3 findings that change the code
+
+- **Series kind** is not in the API. Read `computers.data.series` (daschlab's table: narrow is 400 arcsec/mm or less, patrol under 900, meteor 900 and over). Meteor series are 10 to 21% of good detections and 50% of the 1950s ones, and none after 1960.
+- **`good` and `good_for_outburst`.** The standard rejections are split: hard bits `HIGH_BACKGROUND` and `CLOSE_TO_LIMITING`, soft bits `LARGE_ISO_RMS`, `LARGE_LOCAL_SMOOTH_RMS` and `BIN_DRAD_UNKNOWN`. The outburst trigger reads `good_for_outburst`.
+- **Detrending needs a pool of 10 or more quiet comparison stars of similar brightness and colour.** Bright and red stars (T CrB, the Tang giants) often have none and are left raw with the kill reason `few_comparisons`.
+- **A step is `seam_only` when its epoch lies in the Menzel Gap**, or its nearest good points fall in different stretches, or either side holds under 20 good points in its stretch.
+- **Excerpts in `tests/golden/fixtures` are enriched with awkward rows.** Shares of rejected or flagged rows in them do not describe a whole lightcurve.
+- **Neighbours** within 5 arcsec are pulled by `computers pull --stage neighbours` and merged only when the curves interleave (overlap against the smaller curve under 0.1).
+
 ## Reference targets
 
 T CrB (1946 eruption must be flagged real), KIC 8462852 (must **not** be called a century-long fade), RY Cnc (a known eclipsing binary inside the M44 tile), and the three K giants from Tang et al. 2010. Coordinates and the reasons are in `plan.md` 3.4.
+
+## Sprint 4 findings that change the code
+
+- **The series rule is 2 for every trigger.** A single-plate outburst is found and always killed (`single_series_only`). Do not read that as "no outburst".
+- **Outbursts and dips must recover.** The median of the next 5 good points has to move back at least 0.25 of the way from the event's level. Without it, persistent fades are read as dips and outbursts.
+- **Amplitudes of outbursts are lower limits** (plates saturate). The candidate carries the `lower_limit` flag.
+- **Triggers read the detrended curve when the star could be detrended, otherwise the raw curve** (`not_detrended` flag).
+- **The test tile is refused** by `computers l1 run` until `0007` is chosen and the split lock file exists.
+- **A disappearance is only a trigger.** It carries `needs_cutouts` and nothing more until the vanished protocol (plan 6.6) is met.
+
+## Sprint 5 findings that change the code
+
+- **L2 orders and does not filter.** L1 strict decides what survives. The ranker only orders survivors for the budget (`0008`).
+- **The budget counts stars.** One trigger per star, and a `known_variable` candidate takes no place. T CrB's 1946 eruption is a known-variable candidate, so it is listed with its score and not sent to the crew.
+- **Do not read the ranker score as a probability of a real event.** It is calibrated to the benchmark mix and sits near 1.0.
+- **Do not order candidates by amplitude.** False outbursts on constants are stronger than the planted ones that L1 recovers.
+- **Epochs shared by several stars are suspect.** Four M44 steps share 1971.0 and 12 Tabby stars share 1962.6. Say so in a case file.
+
+## Sprint 6 findings that change the code
+
+- **Most non-detections are not upper limits of a faint star.** 80% (M44) and 61% (T CrB) of the limit rows have a limit deeper than the star's median magnitude. Do not read a limit as "the star is fainter than this" without checking the star's own level.
+- **After cleaning, non-detections are 6 to 12% of rows,** not the 34 to 45% of the raw tables.
+- **Detrended stars are mostly the star median plus about 0.15 to 0.19 mag of noise.** A reconstruction task has little to learn. A model that matches the median has learned nothing, and interpolation is worse than the median.
+- **`Curve` does not carry the measurement error.** `computers.ml.dataset` joins `magcal_local_rms` from the silver table.
+

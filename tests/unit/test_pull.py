@@ -367,3 +367,62 @@ def test_stars_in_the_silver_table_are_inside_the_tile(tmp_path, tiles_patch):
     run(fake, tmp_path, stages=("catalog",))
     stars = silver.read_table(silver.silver_path(tmp_path, "stars", "tcrb"))
     assert all(in_tile(TILE, r, d) for r, d in zip(stars.column("ra_deg").to_pylist(), stars.column("dec_deg").to_pylist(), strict=True))
+
+
+# ------------------------------------------------------------------- neighbours
+
+
+def add_neighbour(fake, of_index, sep_arcsec, mag=15.0, ref=999_000_000_000_001):
+    """Put a faint extra source `sep_arcsec` east of an existing bright source."""
+    bright = [s for s in fake.sources_in_tile() if s["stdmag"] <= 13.5]
+    base = bright[of_index]
+    extra = dict(base)
+    extra.update(
+        ref_number=ref, ref_text=f"APASS_NEIGHBOUR{ref}", stdmag=mag, gsc_bin_index=base["gsc_bin_index"] + 1,
+        ra_deg=round(base["ra_deg"] + sep_arcsec / 3600 / np.cos(np.radians(base["dec_deg"])), 7),
+    )
+    fake.sources.append(extra)
+    return base, extra
+
+
+def test_neighbour_sources_boundary_both_sides_and_excludes_the_star_itself(tmp_path, tiles_patch):
+    fake = FakeDasch(TILE, n_sources=200)
+    base, near = add_neighbour(fake, 0, 4.9, ref=999_000_000_000_001)
+    _, far = add_neighbour(fake, 1, 5.1, ref=999_000_000_000_002)
+    client = make_client(fake, tmp_path)
+    cat = pull.pull_catalog(client, TILE)
+    found = pull.neighbour_sources(cat.catalog, cat.stars, TILE, 5.0)
+    refs = set(found.column("ref_number").to_pylist())
+    assert near["ref_number"] in refs and far["ref_number"] not in refs
+    assert base["ref_number"] not in refs  # a star is not its own neighbour
+    schemas.validate("stars", found)
+
+
+def test_the_neighbours_stage_writes_stars_and_measurements_under_a_neighbours_label(tmp_path, tiles_patch):
+    fake = FakeDasch(TILE, n_sources=200)
+    _, near = add_neighbour(fake, 0, 3.0)
+    code, log, _ = run(fake, tmp_path, stages=("catalog", "exposures", "lightcurves", "neighbours"))
+    assert code == 0, log
+    stars = silver.read_table(silver.silver_path(tmp_path, "stars", "tcrb-neighbours"))
+    meas = silver.read_table(silver.silver_path(tmp_path, "measurements", "tcrb-neighbours"))
+    assert stars.column("ref_number").to_pylist() == [near["ref_number"]]
+    assert set(stars.column("tile").to_pylist()) == {"tcrb-neighbours"}
+    assert set(meas.column("ref_number").to_pylist()) == {near["ref_number"]} and meas.num_rows == 30
+    schemas.validate("measurements", meas)
+    patrol = silver.read_table(silver.silver_path(tmp_path, "stars", "tcrb"))
+    assert near["ref_number"] not in set(patrol.column("ref_number").to_pylist())  # patrol list is untouched
+    assert any("neighbours:" in ln for ln in log)
+
+
+def test_a_tile_with_no_neighbours_writes_empty_tables_and_succeeds(tmp_path, tiles_patch):
+    fake = FakeDasch(TILE, n_sources=200)
+    code, _, _ = run(fake, tmp_path, stages=("catalog", "exposures", "lightcurves", "neighbours"))
+    assert code == 0
+    stars = silver.read_table(silver.silver_path(tmp_path, "stars", "tcrb-neighbours"))
+    assert stars.num_rows == 0
+
+
+def test_the_neighbours_stage_needs_the_catalog_stage_first(tmp_path, tiles_patch):
+    fake = FakeDasch(TILE, n_sources=50)
+    code, log, _ = run(fake, tmp_path, stages=("neighbours",))
+    assert code == 1 and any("catalog stage" in ln for ln in log)

@@ -44,6 +44,8 @@ class Outcome:
     amplitude: float
     expected_missed: bool
     recovered: bool
+    right_type: bool = False  # a trigger of the family's own type matched (triggers only)
+    match_kind: str | None = None  # the type of the first matching trigger, for the confusion matrix
 
 
 @dataclass(frozen=True)
@@ -98,15 +100,19 @@ def wilson(k: int, n: int, z: float = Z95) -> tuple[float, float]:
     return max(0.0, centre - half), min(1.0, centre + half)
 
 
-def completeness(outcomes: Iterable[Outcome]) -> list[Bin]:
-    """One bin per (family, amplitude step), from the outcomes that were not expected to be missed."""
+def completeness(outcomes: Iterable[Outcome], field: str = "recovered") -> list[Bin]:
+    """One bin per (family, amplitude step), from the outcomes that were not expected to be missed.
+
+    `field` picks the outcome attribute that counts as success: `recovered` (any matching
+    trigger) or `right_type`.
+    """
     groups: dict[tuple[str, int], list[Outcome]] = defaultdict(list)
     for o in outcomes:
         if not o.expected_missed:
             groups[(o.family, o.amplitude_index)].append(o)
     bins = []
     for (family, index), items in sorted(groups.items()):
-        n, k = len(items), sum(o.recovered for o in items)
+        n, k = len(items), sum(bool(getattr(o, field)) for o in items)
         lo, hi = wilson(k, n)
         bins.append(
             Bin(family, index, float(np.mean([o.amplitude for o in items])), n, k, k / n, lo, hi,

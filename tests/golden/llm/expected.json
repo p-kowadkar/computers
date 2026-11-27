@@ -1,0 +1,1300 @@
+{
+ "fallback": {
+  "21d28fc6afdd9a0c": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-045",
+       "E-048",
+       "E-049",
+       "E-051",
+       "E-052",
+       "E-056",
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-046",
+       "E-047",
+       "E-054"
+      ],
+      "text": "The event is a step between 1971.0 and 1971.04 whose amplitude of 0.97 mag is driven by non-blue emulsion points: the NON_BLUE-tagged measurements in the listed event points (dny, dnr series) show offsets near -1.2 to -1.6 mag, while the blue dnb points sit near -0.1 to -0.3 mag."
+     },
+     {
+      "evidence_ids": [
+       "E-058"
+      ],
+      "text": "The known-issue checklist flags emulsion_non_blue for 19 of 40 trigger points, so nearly half of the trigger is affected by a known non-blue emulsion problem, which is an emulsion-related artifact mechanism."
+     },
+     {
+      "evidence_ids": [
+       "E-025",
+       "E-026",
+       "E-032"
+      ],
+      "text": "The dny and dnr series carry large zero-point offsets (dnr median -1.464 mag, dny median -1.12 mag, kc -0.914), so non-blue plates from these series are systematically offset and can produce a spurious deep drop when they dominate the event epoch."
+     },
+     {
+      "evidence_ids": [
+       "E-012",
+       "E-013",
+       "E-014",
+       "E-057"
+      ],
+      "text": "The event lies in the 1960s and 1970s, where the decade scatter is large (1960 scatter 0.711, 1970 scatter 0.272) and the medians shift to about -0.22 to -0.24 mag, compared with near-zero medians earlier; the step could reflect a seam between plate-series epochs rather than a single real change."
+     },
+     {
+      "evidence_ids": [
+       "E-068",
+       "E-002",
+       "E-063",
+       "E-057",
+       "E-070"
+      ],
+      "text": "The lightcurve is not detrended and the event is not confirmed on a single plate (single_plate false, read_detrended_curve false), and a plate_edge flag is raised on one trigger point, so the step cannot yet be separated from plate-level systematics; the points shown are only 30 of 40 and rows were heavily cleaned, so the missing points could hide the counter-evidence."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "24517f38b39041da": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-045",
+       "E-047",
+       "E-049",
+       "E-051",
+       "E-052",
+       "E-054",
+       "E-055"
+      ],
+      "text": "The event is a long-term dimming confined to plates from 1925 to 1952 (epoch 1925.15 to 1952.23), and the ac series dominates the listed points with negative offsets near -1 mag, which is the pattern a series-specific zero-point or seam problem would produce."
+     },
+     {
+      "evidence_ids": [
+       "E-016",
+       "E-018",
+       "E-011"
+      ],
+      "text": "Series zero points are far from the mean for the ac series (median -0.202 over 155 plates) and ax (-0.457), and the 1950s decade summary has a median offset of -0.491 with scatter 0.646, so the dip sits where plate-to-plate calibration is least stable."
+     },
+     {
+      "evidence_ids": [
+       "E-059",
+       "E-061",
+       "E-057",
+       "E-062"
+      ],
+      "text": "Known-issue checks flag the event's population heavily: 62 of 447 points are blend_suspect, 130 are shape_outlier, 41 are emulsion_non_blue, and 13 are plate_edge, so the trigger is not clean."
+     },
+     {
+      "evidence_ids": [
+       "E-045",
+       "E-047",
+       "E-048",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-052",
+       "E-054",
+       "E-055"
+      ],
+      "text": "Most listed dim points carry both BLEND_SUSPECT and SHAPE_OUTLIER tags (E-045, E-047, E-048, E-049, E-050, E-051, E-052, E-054, E-055), so a blend or a plate-defect shape could account for the dimming without any real stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-056",
+       "E-065"
+      ],
+      "text": "The event rests on 30 of 447 points chosen by a strongest-half-plus-sample rule, and the packet provides no per-plate check of the omitted 417 points, so a selection effect or unrepresentative sampling cannot be excluded; the packet also does not show a plate-offset test on the event's own plates, since the no_plate_offset check (E-065) is a global pass."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "38ecda2a7c6f3e28": {
+   "argument": null,
+   "failure": "LLMError: the reply was empty",
+   "valid": false
+  },
+  "4a62cede78f3be32": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-062",
+       "E-025",
+       "E-026",
+       "E-027",
+       "E-028",
+       "E-029",
+       "E-030",
+       "E-031",
+       "E-032",
+       "E-034",
+       "E-035",
+       "E-036",
+       "E-037",
+       "E-038",
+       "E-039",
+       "E-040",
+       "E-041",
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-045",
+       "E-047",
+       "E-048",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-052",
+       "E-053",
+       "E-054"
+      ],
+      "text": "The candidate's 1980 to 1989 disappearance (amplitude 1.21 mag, single_plate false) rests almost entirely on non-detections at limiting magnitudes. The known-issue check flags 29 of 31 points as deep_limit_suspect, so the apparent drop may reflect plate depth rather than a real fading."
+     },
+     {
+      "evidence_ids": [
+       "E-016",
+       "E-065",
+       "E-064",
+       "E-026",
+       "E-027",
+       "E-054",
+       "E-033",
+       "E-046"
+      ],
+      "text": "Most non-detections come from the dnb series, whose zero point is offset by -1.489 mag from the other series. A series seam or zero-point error could produce a step that reads as a disappearance, although the no_plate_offset check passes."
+     },
+     {
+      "evidence_ids": [
+       "E-055",
+       "E-068"
+      ],
+      "text": "The trigger lists only 30 of 31 points, with the strongest half and an even sample of the rest. The omitted point cannot be checked, so the time profile of the drop cannot be fully verified from the packet."
+     },
+     {
+      "evidence_ids": [
+       "E-009",
+       "E-012",
+       "E-019"
+      ],
+      "text": "Plate-era scatter is large in the decades spanning the event: 0.293 mag in the 1940s (median offset 0.237) and 0.526 mag in the 1970s. Offsets of this size between plates could mimic a dip of 1.21 mag once the deep-limit points are included."
+     },
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-059",
+       "E-061",
+       "E-056",
+       "E-057",
+       "E-060"
+      ],
+      "text": "The artifact case is weakened by several clean checks: no blend, merged source, plate edge, emulsion, or shape-outlier flags were raised. The packet therefore offers no direct plate defect, so the artifact explanation rests on depth and series effects alone."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "4a6f6a167ffbbee2": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-047",
+       "E-049",
+       "E-051",
+       "E-054"
+      ],
+      "text": "Blend contamination is the strongest non-astrophysical candidate: 534 of 1461 trigger points (about 37%) are flagged BLEND_SUSPECT, and the listed 1930s to 1950s dips (e.g., offsets of -1.071, -1.150, -1.027, -1.115 mag) all carry that tag, so a neighbouring star or overlapping image could produce deep apparent drops."
+     },
+     {
+      "evidence_ids": [
+       "E-062",
+       "E-048",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-055"
+      ],
+      "text": "Several of the deepest dips also carry SHAPE_OUTLIER tags, which is consistent with a blended or distorted image rather than a real stellar change; 353 of 1461 points are shape outliers overall."
+     },
+     {
+      "evidence_ids": [
+       "E-063",
+       "E-058",
+       "E-059"
+      ],
+      "text": "Plate-edge and emulsion problems are present in the trigger: 75 points are flagged plate_edge, 63 emulsion_non_blue and 3 emulsion_unknown, so edge vignetting or emulsion response differences could shift magnitudes on the affected plates."
+     },
+     {
+      "evidence_ids": [
+       "E-009",
+       "E-010",
+       "E-011",
+       "E-040",
+       "E-041"
+      ],
+      "text": "The dip is tied to the 1930s to 1950s period, when the decade median offsets drift negative (-0.001 in the 1930s, -0.134 in the 1940s, -0.388 in the 1950s) and the series zero points for rh (-0.101) and rl (-0.247) are offset from the early-century series; a calibration or series-seam effect is a plausible source of a long-term apparent trend."
+     },
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-003",
+       "E-057"
+      ],
+      "text": "The packet does not rule out an artifact: the event rests on a single long-term candidate with 30 of 1461 points shown, the amplitude is 0.74 mag, the L2 score is only an ordering value, and the packet gives no per-plate image checks or star-field overlays that would separate a blend from a real change, so these checks are missing and should be requested."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "4a7661350ce80b14": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-058"
+      ],
+      "text": "Blend contamination is the leading non-astrophysical explanation: 350 of 564 trigger points (about 62%) are flagged BLEND_SUSPECT, so a neighbouring star could be contaminating the photometry at many epochs."
+     },
+     {
+      "evidence_ids": [
+       "E-047",
+       "E-049",
+       "E-051",
+       "E-053"
+      ],
+      "text": "Several listed detections carry a BLEND_SUSPECT tag together with a SHAPE_OUTLIER tag, including the deep negative dips on rh07064e0s0 and rh08003e0s0, which fits a blended or distorted image rather than a real brightening or dimming."
+     },
+     {
+      "evidence_ids": [
+       "E-061",
+       "E-056",
+       "E-044",
+       "E-048"
+      ],
+      "text": "Plate-edge and emulsion defects are present in the trigger: 35 points are flagged PLATE_EDGE and 35 flagged as non-blue emulsion, and a listed point on md27229e0s0 is both a plate-edge hit and a 0.39 mag offset, so edge or emulsion effects could mimic part of the signal."
+     },
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-033",
+       "E-038",
+       "E-039",
+       "E-015"
+      ],
+      "text": "The candidate spans 1920 to 1952 and its listed offsets straddle plate-series boundaries (for example mc, ma, i, rh, and rl series with differing zero points from -0.194 to +0.573), so a series-zero-point or seam offset could produce an apparent step; the series zero points differ by more than 0.5 mag across series."
+     },
+     {
+      "evidence_ids": [
+       "E-067",
+       "E-064",
+       "E-055",
+       "E-003"
+      ],
+      "text": "The known-variable and plate-offset checks pass, and the event's amplitude is not a lower limit, but these checks do not clear the blend, shape, and edge flags, and only 30 of 564 points are shown, so the evidence cannot rule out an artifact and the case that the event is an artifact remains unconfirmed."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "a09bfc1961b345d8": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-043",
+       "E-044",
+       "E-045",
+       "E-046",
+       "E-047",
+       "E-048",
+       "E-049",
+       "E-054",
+       "E-055",
+       "E-056",
+       "E-001"
+      ],
+      "text": "Blend contamination is the leading artifact hypothesis: 1122 of 1451 trigger points (about 77%) carry the BLEND_SUSPECT flag, and the listed event points in the 1906-1949 ac, rh and i series are tagged BLEND_SUSPECT, so the dip could come from a neighbouring source bleeding into the aperture on crowded m44 fields."
+     },
+     {
+      "evidence_ids": [
+       "E-063",
+       "E-062",
+       "E-046",
+       "E-048"
+      ],
+      "text": "Plate-edge and shape artifacts are present: 42 points are flagged PLATE_EDGE and 394 SHAPE_OUTLIER, and the most extreme listed dip at 1934.031 (offset -1.076) carries both BLEND_SUSPECT and SHAPE_OUTLIER, consistent with a defect or edge effect rather than a real brightness change."
+     },
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-059",
+       "E-001"
+      ],
+      "text": "Emulsion effects are flagged: 83 points show a non-blue emulsion response and 3 have an unknown emulsion, so colour-dependent plate response could shift magnitudes in the affected series."
+     },
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-033",
+       "E-029",
+       "E-016",
+       "E-040",
+       "E-050",
+       "E-051",
+       "E-052",
+       "E-053",
+       "E-005"
+      ],
+      "text": "Series seams may drive the apparent long-term step: the event spans 1890 to 1949 across the i, ma and ac series, and series zero points differ strongly (ma +0.855, i +0.732, ac +0.008, rh -0.318), so the 1890-1938 high-offset points in i and ma may reflect a calibration offset between plate series rather than a single stellar state; the 1936-1938 ma points (offsets 1.07 to 1.68) sit well above the ac-dominated baseline."
+     },
+     {
+      "evidence_ids": [
+       "E-057",
+       "E-069",
+       "E-066",
+       "E-003"
+      ],
+      "text": "The packet cannot exclude these artifacts: the trigger omits 1421 of its 1451 points (E-057), so the blend and shape rates cannot be checked against the full set, and the known-variable and no-plate-offset checks do not settle the matter; the candidate should be treated as unconfirmed until the full point list and per-series residuals are reviewed."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "b0f2fdc219ae2454": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-055",
+       "E-037",
+       "E-038"
+      ],
+      "text": "The event is dominated by blend-suspect photometry: 29 of 40 trigger points carry BLEND_SUSPECT, including the early negative-offset points E-037 and E-038, so a blended image could produce the apparent dip."
+     },
+     {
+      "evidence_ids": [
+       "E-053",
+       "E-038",
+       "E-039",
+       "E-041",
+       "E-042",
+       "E-043",
+       "E-045"
+      ],
+      "text": "Non-blue emulsion behaviour is common in this trigger: 17 of 40 points are flagged NON_BLUE. The deepest negative offsets come from non-blue dny and dnr plates (E-038, E-039, E-041, E-042, E-043, E-045), consistent with an emulsion response effect."
+     },
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-023",
+       "E-024",
+       "E-027",
+       "E-044",
+       "E-049"
+      ],
+      "text": "The step between epochs 1971.04 and 1971.97 coincides with a seam between plate series. Pre-step points are from dny and dnr plates, whose series zero points are strongly offset (E-023 at -1.449, E-024 at -1.123), while post-step points are from ir plates (E-027 at -0.483) with positive offsets (E-044 at 0.524, E-049 at 0.274). A zero-point mismatch could create the apparent step."
+     },
+     {
+      "evidence_ids": [
+       "E-057",
+       "E-045",
+       "E-046"
+      ],
+      "text": "Shape-outlier flags point to a measurement problem: 4 of 40 points are flagged SHAPE_OUTLIER, including E-045 and E-046 in or near the event window."
+     },
+     {
+      "evidence_ids": [
+       "E-052",
+       "E-065",
+       "E-012",
+       "E-058",
+       "E-061"
+      ],
+      "text": "The packet cannot rule out selection effects. Only 30 of 40 trigger points are listed (E-052), 1635 of 3302 rows were rejected by cleaning (E-065), and the 1960s scatter is large (E-012, 0.681). Plate-edge and plate-offset checks pass (E-058, E-061), which weakens a plate-defect explanation but does not exclude a blend or seam effect."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "c252cfe4a13e94fa": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-049",
+       "E-033",
+       "E-035",
+       "E-036",
+       "E-037",
+       "E-040",
+       "E-042",
+       "E-043",
+       "E-045"
+      ],
+      "text": "The event's points are dominated by the red-sensitive dnr and dny emulsions: the known-issue checklist flags 18 of 40 points as non-blue emulsion effects, so an emulsion response artifact is the leading non-astrophysical explanation."
+     },
+     {
+      "evidence_ids": [
+       "E-020",
+       "E-021",
+       "E-019",
+       "E-002"
+      ],
+      "text": "The red and yellow series zero points sit far from the blue reference: dnr has a median offset of 0.886 mag and dny 0.806 mag, while dnb is -0.027 mag, so non-blue plates carry a systematic brightness offset that could mimic a step of about 0.6 to 0.9 mag."
+     },
+     {
+      "evidence_ids": [
+       "E-010",
+       "E-011",
+       "E-009",
+       "E-002"
+      ],
+      "text": "The 1960 decade, which contains the event epoch, has a median offset of 0.647 mag and scatter of 0.689 mag across 17 points, far above neighbouring decades (scatter about 0.1 to 0.2 mag), which points to a calibration or seam problem in that era rather than a stable stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-053",
+       "E-054",
+       "E-035",
+       "E-036",
+       "E-037",
+       "E-040",
+       "E-042"
+      ],
+      "text": "Shape and edge checks also flag the event: 4 of 40 points are shape outliers, all on red plates (E-035, E-036, E-037, E-040), and one point sits on a plate edge (E-042), consistent with a plate-quality or seam artifact in the step's epoch window."
+     },
+     {
+      "evidence_ids": [
+       "E-048",
+       "E-061",
+       "E-003",
+       "E-038",
+       "E-039",
+       "E-041",
+       "E-044",
+       "E-046",
+       "E-047"
+      ],
+      "text": "The packet does not support a clean real-event reading: the event is a candidate only, the trigger's 40 points were reduced to 30 listed points, the cleaning step rejected 2685 of 4229 rows, and the blue plates show no comparable step (for example E-038, E-039, E-041, E-044, E-046, E-047 near 0 mag), so the missing points and the rejected rows are gaps that could hide either contrary or confirming evidence."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "e0d547ff51002ac2": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-031",
+       "E-032",
+       "E-033",
+       "E-034",
+       "E-048",
+       "E-049",
+       "E-051"
+      ],
+      "text": "The event is a multi-plate, multi-series outburst (epoch 1946.11 to 1946.16) built from points on ac, ee and rh plates, so a single-plate defect cannot explain the whole structure, but the event is concentrated in 1946 and a seam between plate series in that interval is a candidate explanation to check."
+     },
+     {
+      "evidence_ids": [
+       "E-064",
+       "E-031",
+       "E-032",
+       "E-033",
+       "E-034",
+       "E-035",
+       "E-037",
+       "E-038",
+       "E-039",
+       "E-040",
+       "E-041",
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-045",
+       "E-046",
+       "E-047",
+       "E-048",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-052",
+       "E-056"
+      ],
+      "text": "Most of the event's points are flagged STD_SOFT, and the known-issue checklist flags 23 of 26 soft-rejected points, so the outburst rests mainly on points that the cleaning step marked as soft and that are not clean detections."
+     },
+     {
+      "evidence_ids": [
+       "E-023",
+       "E-033",
+       "E-036",
+       "E-037",
+       "E-039",
+       "E-041",
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-045",
+       "E-046",
+       "E-053",
+       "E-054",
+       "E-055"
+      ],
+      "text": "The ee series has a series zero point of -1.843 from only 3 plates, and the event's ee points cluster near offsets of -1.6 to -2.0, so the apparent brightening may reflect a zero-point offset specific to the ee plate series rather than a real change in the star."
+     },
+     {
+      "evidence_ids": [
+       "E-036",
+       "E-058"
+      ],
+      "text": "Plate 'ee02388e0s0' carries the EMULSION_UNKNOWN tag, and the emulsion_unknown check flags 1 of 26 plates, so an unidentified emulsion response is a direct, plate-specific artifact pathway for at least one point in the event."
+     },
+     {
+      "evidence_ids": [
+       "E-067",
+       "E-068",
+       "E-002",
+       "E-069"
+      ],
+      "text": "The light curve is not detrended, the candidate is catalogued as a known variable, and the read curve is not detrended, so a slow plate or variable-star baseline could mimic the outburst; the packet also reports a large amplitude of 3.61 mag as only a lower limit, and the estimate is not confirmed. Missing from the packet: no check of the adjacent-plate context beyond the listed series, and no detrended curve to compare."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "fbb517bc07a8f24b": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-058"
+      ],
+      "text": "Blend contamination is the most common flag in the trigger: 639 of 978 points (about 65%) are flagged as blend_suspect, so the photometry at many epochs may reflect neighbouring-star light rather than this star alone."
+     },
+     {
+      "evidence_ids": [
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-046",
+       "E-048",
+       "E-052",
+       "E-054"
+      ],
+      "text": "Several of the listed event points carry blend or shape-outlier tags, including E-042, E-043, E-044, E-046, E-048, E-052 and E-054, so some of the apparent dips and rises could come from crowding or mis-shaped images rather than real brightness change."
+     },
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-041",
+       "E-043",
+       "E-044",
+       "E-054"
+      ],
+      "text": "Shape outliers are widespread (283 of 978 flagged), and the listed points E-041, E-043, E-044 and E-054 carry SHAPE_OUTLIER, which is consistent with plate-image or measurement defects instead of stellar variability."
+     },
+     {
+      "evidence_ids": [
+       "E-056",
+       "E-057"
+      ],
+      "text": "Emulsion problems are present: 58 points are flagged emulsion_non_blue and 2 emulsion_unknown, so colour and emulsion response differences between plate series could produce offsets that look like a long-term change."
+     },
+     {
+      "evidence_ids": [
+       "E-031",
+       "E-028",
+       "E-038",
+       "E-021",
+       "E-024",
+       "E-053",
+       "E-061",
+       "E-002"
+      ],
+      "text": "The event spans series with very different zero points (for example ma at 0.907, i at 0.822, rh at -0.195, bm at -0.299, dnb at -0.322), and the event points move between these series, so a seam between plate series could mimic a step in the lightcurve; plate-edge flags on E-053 and 42 plate-edge points add to this concern."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  }
+ },
+ "nooa": {
+  "21d28fc6afdd9a0c": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-045",
+       "E-048",
+       "E-049",
+       "E-051",
+       "E-052",
+       "E-056"
+      ],
+      "text": "Nineteen of the forty trigger points are flagged for non-blue emulsion, and the event's detections in the 1969 to 1972 window are dominated by the dny, dnr and other non-blue plate tags, so the step may reflect an emulsion response difference rather than a stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-024",
+       "E-025",
+       "E-026",
+       "E-045",
+       "E-048",
+       "E-049",
+       "E-051",
+       "E-052",
+       "E-056"
+      ],
+      "text": "The non-blue points sit far below the blue-series points: the dny and dnr series zero points are -1.12 and -1.46 magnitudes, against -0.23 for dnb, which suggests a systematic offset between emulsion families that would produce a step when the series changes."
+     },
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-046",
+       "E-047",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-054"
+      ],
+      "text": "The event epochs run from 1971.00 to 1971.04, and the non-blue detections around that time (E-049 at 1970.997, E-051 at 1971.975) lie on either side of the step, while the blue dnb points before and after it differ only by a few tenths of a magnitude; this pattern fits a seam between plate series."
+     },
+     {
+      "evidence_ids": [
+       "E-063",
+       "E-068",
+       "E-002"
+      ],
+      "text": "One point is flagged for plate-edge effects, and the lightcurve is not detrended (the flag is raised and the curve is the raw one), so an edge or uncorrected plate-level systematic cannot be excluded from the packet."
+     },
+     {
+      "evidence_ids": [
+       "E-057",
+       "E-002"
+      ],
+      "text": "The packet does not contain the full set of points: block 3 lists 30 of 40 trigger points and the cuts thinned it further, so omitted points could show whether the step persists within a single emulsion family; that check is missing and the artifact case cannot be fully settled from this packet."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "24517f38b39041da": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-057"
+      ],
+      "text": "The known-issue checklist flags emulsion_non_blue on 41 of 447 points, so a non-blue emulsion response could contribute to the apparent dimming."
+     },
+     {
+      "evidence_ids": [
+       "E-059",
+       "E-045",
+       "E-047",
+       "E-048",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-052",
+       "E-054",
+       "E-055"
+      ],
+      "text": "Blend_suspect is flagged on 62 of 447 points, and the strongest dimming points in the event (E-045, E-047, E-048, E-049, E-050, E-051, E-052, E-054, E-055) carry the BLEND_SUSPECT tag, so a neighbouring star on the plate could be causing the dip."
+     },
+     {
+      "evidence_ids": [
+       "E-061",
+       "E-045",
+       "E-046",
+       "E-047",
+       "E-048",
+       "E-049",
+       "E-051",
+       "E-052",
+       "E-053",
+       "E-054",
+       "E-055"
+      ],
+      "text": "Shape_outlier is flagged on 130 of 447 points, and most of the event's deepest measurements (E-045, E-046, E-047, E-048, E-049, E-051, E-052, E-053, E-054, E-055) carry the SHAPE_OUTLIER tag, suggesting image-shape problems rather than stellar variability."
+     },
+     {
+      "evidence_ids": [
+       "E-011",
+       "E-012",
+       "E-016",
+       "E-005",
+       "E-029"
+      ],
+      "text": "The 1950 to 1960s decade medians are strongly negative (-0.491 in the 1950s with scatter 0.646, and -0.192 in the 1960s with scatter 0.527), and the event lies in the 1925 to 1952 window, so a plate-series or calibration seam at the 1950 boundary could mimic a long-term dimming trend; series ac has a zero point of -0.202 across 155 points, versus about +0.15 for the early series."
+     },
+     {
+      "evidence_ids": [
+       "E-062",
+       "E-056"
+      ],
+      "text": "Plate_edge is flagged on 13 of 447 points, and the event is built from only 30 listed points out of 447 with 15 points thinned to fit the budget, so a missing or edge-affected point could distort the apparent event shape; the evidence does not show which listed points are plate-edge cases, so this cannot be confirmed from the packet."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "38ecda2a7c6f3e28": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-058"
+      ],
+      "text": "Emulsion effects are the most common known issue in this packet: 62 of 1188 trigger points are flagged as non-blue emulsion, so a plate-emulsion response change could contribute to the apparent dip."
+     },
+     {
+      "evidence_ids": [
+       "E-059",
+       "E-047"
+      ],
+      "text": "Two points carry an unknown-emulsion tag, including the deepest dip at 1934.331 with an offset of -2.613 mag, which is a single-plate excursion whose emulsion response is unverified."
+     },
+     {
+      "evidence_ids": [
+       "E-062",
+       "E-050",
+       "E-055"
+      ],
+      "text": "Shape outliers are widespread, with 241 of 1188 points flagged, and several of the listed dips (1939.287 at -1.445 mag, 1950.85 at -1.312 mag) carry the SHAPE_OUTLIER tag, suggesting the low points may reflect plate-specific image quality rather than the star."
+     },
+     {
+      "evidence_ids": [
+       "E-063",
+       "E-051"
+      ],
+      "text": "Plate-edge flags affect 39 points, and the listed point at 1943.022 is tagged both SHAPE_OUTLIER and PLATE_EDGE, so edge effects on the plate could be affecting some of the measurements."
+     },
+     {
+      "evidence_ids": [
+       "E-016",
+       "E-015",
+       "E-020",
+       "E-024",
+       "E-002"
+      ],
+      "text": "The series-zero-point evidence shows the ac series near zero (-0.008 over 528 points), but the series a, b, and dnb zero points are offset, and the event spans the 1900 to 1952 epochs across several series boundaries, so a seam between plate series is possible; the packet does not show the per-series alignment for the dip epochs."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "4a62cede78f3be32": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-062",
+       "E-025",
+       "E-026",
+       "E-027"
+      ],
+      "text": "The known-issue checklist flags deep_limit_suspect on 29 of 31 points, so most of the event's non-detections sit at plate limits that may not reach the depth needed to see the star reliably."
+     },
+     {
+      "evidence_ids": [
+       "E-025",
+       "E-033",
+       "E-046",
+       "E-054"
+      ],
+      "text": "The disappearance rests on non-detections, not detections: every point in the event's listing has offset_mag null and detection false, so the drop depends on limiting magnitudes rather than on measured brightness."
+     },
+     {
+      "evidence_ids": [
+       "E-033",
+       "E-046",
+       "E-062"
+      ],
+      "text": "The two points not tagged DEEP_LIMIT_SUSPECT (E-033 and E-046) have limiting offsets near 1.0 mag, so the only clean non-detections are shallow ones; the deep-limit tags on the rest suggest the drop may reflect plate depth rather than a real fading."
+     },
+     {
+      "evidence_ids": [
+       "E-016",
+       "E-026",
+       "E-054",
+       "E-055"
+      ],
+      "text": "The dnb series has a median zero-point offset of -1.489 mag from a single point, and the event's points are dominated by dnb plates from 1980 to 1989, so a series-level calibration offset could produce an apparent step at the seam between plate series."
+     },
+     {
+      "evidence_ids": [
+       "E-055",
+       "E-002"
+      ],
+      "text": "Block 3 omits one of the 31 trigger points by a strongest-half and even-sample rule, so the packet cannot confirm whether the dropped point would have changed the disappearance pattern; the missing point is a gap I cannot evaluate."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "4a6f6a167ffbbee2": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-047",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-053",
+       "E-054",
+       "E-055"
+      ],
+      "text": "Blend contamination is widespread in this trigger: 534 of 1461 points (about 37%) are flagged blend_suspect, and the listed event points include several BLEND_SUSPECT tags on the dimmest measurements, including the deepest offsets around 1936 to 1951."
+     },
+     {
+      "evidence_ids": [
+       "E-062",
+       "E-048",
+       "E-049",
+       "E-050",
+       "E-051",
+       "E-055",
+       "E-040",
+       "E-041",
+       "E-021",
+       "E-016"
+      ],
+      "text": "The downward excursions cluster in the rh, rl, bm and ac series, several of which carry shape-outlier tags, so the dip may reflect a shape or blend artifact in those plate series rather than a stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-059"
+      ],
+      "text": "Emulsion effects are flagged: 63 of 1461 points are non-blue emulsion and 3 are unknown emulsion, so colour-dependent plate response could shift magnitudes on some plates."
+     },
+     {
+      "evidence_ids": [
+       "E-063",
+       "E-024",
+       "E-040",
+       "E-041"
+      ],
+      "text": "Plate-edge effects are flagged on 75 of 1461 points, and several dim measurements sit on plates whose series have large negative zero-point offsets, which could mimic a dimming at plate margins."
+     },
+     {
+      "evidence_ids": [
+       "E-004",
+       "E-012",
+       "E-026",
+       "E-031",
+       "E-057",
+       "E-011"
+      ],
+      "text": "Calibration seams exist between plate series: the century decade medians drift from about +0.25 in 1880 to about -0.44 in 1960, and series zero points range from -0.49 (dny) to +0.38 (j), so the long-term epoch trend that defines the event may partly reflect series-to-series offsets. The packet also omits 1431 of 1461 points (E-057), so the full distribution cannot be checked here."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "4a7661350ce80b14": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-041",
+       "E-045",
+       "E-046",
+       "E-047",
+       "E-049",
+       "E-051",
+       "E-053",
+       "E-054"
+      ],
+      "text": "Blend contamination is the strongest non-astrophysical explanation: 350 of 564 trigger points are flagged BLEND_SUSPECT, and the listed event points with negative offsets (E-041, E-045, E-046, E-047, E-049, E-051, E-053, E-054) carry that tag, so the dip may come from a neighbouring source on the plate rather than the star."
+     },
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-061",
+       "E-044",
+       "E-048",
+       "E-047",
+       "E-049",
+       "E-051",
+       "E-053"
+      ],
+      "text": "Shape and plate-edge defects touch a sizeable share of the points that define the event: 165 of 564 points are SHAPE_OUTLIER and 35 are PLATE_EDGE, and several of the listed points carry these tags, including E-044 and E-048 at plate edges and E-047, E-049, E-051, E-053 as shape outliers."
+     },
+     {
+      "evidence_ids": [
+       "E-056",
+       "E-052"
+      ],
+      "text": "Emulsion response is a plausible artifact route: 35 of 564 points are flagged emulsion_non_blue, and the listed point E-052 at 1946.965 carries the NON_BLUE tag with a positive offset of 0.619, so a colour-dependent emulsion response could shift a subset of magnitudes."
+     },
+     {
+      "evidence_ids": [
+       "E-009",
+       "E-010",
+       "E-038",
+       "E-039",
+       "E-033",
+       "E-028"
+      ],
+      "text": "The event sits in the 1930 to 1940 region where the plate-to-plate scatter is largest and the series zero points disagree: the 1930s decade has scatter 0.453 and median offset 0.031, the 1940s has scatter 0.417, while the zero points of series such as rh (-0.125) and rl (-0.194) differ from mc (0.539) and i (0.525), so a seam between plate series could produce apparent step changes."
+     },
+     {
+      "evidence_ids": [
+       "E-055",
+       "E-059",
+       "E-062",
+       "E-064",
+       "E-066",
+       "E-002"
+      ],
+      "text": "The packet cannot exclude an artifact because only 30 of 564 trigger points are shown and the rest were thinned to fit the budget, so the evidence that the dip persists across plates and series is incomplete; the checks that passed (source_merged, deep_limit_suspect, no_plate_offset, detrended) do not establish that the event is real, and the event remains a candidate, not a discovery."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "a09bfc1961b345d8": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-043",
+       "E-044",
+       "E-049",
+       "E-056"
+      ],
+      "text": "Blend contamination is the leading non-astrophysical suspicion: 1122 of 1451 trigger points carry the BLEND_SUSPECT flag, and several listed detections in the ac and rh series are tagged BLEND_SUSPECT (for example the 1906, 1914, 1934 and 1949 points), so the dip could come from a neighbouring source on the plate rather than the target star."
+     },
+     {
+      "evidence_ids": [
+       "E-005",
+       "E-029",
+       "E-033",
+       "E-050",
+       "E-051",
+       "E-052",
+       "E-053"
+      ],
+      "text": "The brightening and dimming points sit in plate series with weak zero points: the 1890 and 1936 to 1938 points come from series i, ma and others whose series zero points are offset by roughly 0.7 to 0.9 mag (i at 0.732, ma at 0.855), and the 1890s decade median is +0.688 against a scatter of 0.177, so a seam between plate series could produce a step that looks like a long-term change."
+     },
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-059",
+       "E-004",
+       "E-005",
+       "E-042",
+       "E-002"
+      ],
+      "text": "Emulsion effects are flagged in 83 points for non-blue emulsions and 3 for unknown emulsions, and the 1880 to 1890 decades are sparse (n=3 and n=42) with large scatter (0.655 in the 1880s), so the early points, including the 1890 detection that anchors the epoch_start, may reflect emulsion response rather than stellar flux."
+     },
+     {
+      "evidence_ids": [
+       "E-063",
+       "E-062",
+       "E-046",
+       "E-045",
+       "E-048"
+      ],
+      "text": "Plate-edge and shape artefacts are present: 42 points are flagged PLATE_EDGE and 394 SHAPE_OUTLIER, including the 1926 point tagged both PLATE_EDGE and SHAPE_OUTLIER and the 1934 and 1917 points tagged SHAPE_OUTLIER, which suggests some of the low points may be plate defects rather than real dimmings."
+     },
+     {
+      "evidence_ids": [
+       "E-057",
+       "E-002",
+       "E-003"
+      ],
+      "text": "The packet cannot exclude an artifact because 1451 points were reduced to 30 listed points (E-057) and 15 more were thinned for budget, so the sampled points cannot confirm that the event is a coherent feature; the evidence supplied does not include per-point plate-quality or blend-model data, and this missing material should be obtained before the event is taken further."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "b0f2fdc219ae2454": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-055",
+       "E-038",
+       "E-039",
+       "E-041",
+       "E-043",
+       "E-045"
+      ],
+      "text": "Blend contamination is the leading non-astrophysical explanation: 29 of 40 trigger points are flagged BLEND_SUSPECT, and the event's detections in the dny and dnr series carry this tag repeatedly, so a neighbouring star could be contributing to the measured magnitudes."
+     },
+     {
+      "evidence_ids": [
+       "E-053",
+       "E-023",
+       "E-024",
+       "E-039",
+       "E-042",
+       "E-041"
+      ],
+      "text": "The emulsion response is suspect: 17 of 40 points are flagged NON_BLUE, and the deepest offsets in the step come from the dny and dnr series, whose zero points are strongly negative (dnr -1.449, dny -1.123), so the step could be an emulsion colour or sensitivity effect rather than a change in the star."
+     },
+     {
+      "evidence_ids": [
+       "E-002",
+       "E-027",
+       "E-044",
+       "E-046",
+       "E-047",
+       "E-049",
+       "E-051",
+       "E-045"
+      ],
+      "text": "The step falls where the plate series change: the event runs from 1971.04 to 1971.97, the ir series (zero point -0.483) supplies the post-step points while dnr and dny supply the pre-step points, so a seam between plate series could produce the apparent step in amplitude 0.53 mag."
+     },
+     {
+      "evidence_ids": [
+       "E-057",
+       "E-052",
+       "E-045",
+       "E-046"
+      ],
+      "text": "Shape and sampling weaken the event: 4 points are flagged SHAPE_OUTLIER and the trigger shows only 30 of 40 points, with the rest omitted by rule, so the step cannot be checked against the full set of measurements."
+     },
+     {
+      "evidence_ids": [
+       "E-012",
+       "E-027",
+       "E-052",
+       "E-001"
+      ],
+      "text": "The packet does not contain enough to rule out an astrophysical origin: the summary shows the 1960 decade scatter is high (0.681) and no series-level calibration check for the ir series is given, so the artifact case is plausible but not demonstrated. Missing: per-plate comparison stars and the full 40-point trigger."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "c252cfe4a13e94fa": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-020",
+       "E-033",
+       "E-035",
+       "E-036",
+       "E-037"
+      ],
+      "text": "The event's points are dominated by the dnr series, whose series zero point sits about 0.89 mag off, so the step is likely a series-level calibration seam rather than a stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-049",
+       "E-033",
+       "E-043",
+       "E-045"
+      ],
+      "text": "Most flagged points carry the NON_BLUE emulsion tag (18 of 40 trigger points flagged), and the emulsion behaviour of red-sensitive plates can mimic a brightening that blue plates do not show."
+     },
+     {
+      "evidence_ids": [
+       "E-053",
+       "E-035",
+       "E-036",
+       "E-037",
+       "E-040"
+      ],
+      "text": "The shape-outlier check flags 4 of 40 points, and the points with SHAPE_OUTLIER tags all come from dnr plates in 1969 to 1972, so the step is concentrated in one plate series and time window."
+     },
+     {
+      "evidence_ids": [
+       "E-034",
+       "E-038",
+       "E-039",
+       "E-041",
+       "E-044",
+       "E-019"
+      ],
+      "text": "The blue-series points (dnb) in the same epoch show offsets near zero (for example -0.121, 0.056, -0.134, -0.239, 0.047), which argues against a real stellar change seen across plate series."
+     },
+     {
+      "evidence_ids": [
+       "E-048",
+       "E-054",
+       "E-042",
+       "E-061"
+      ],
+      "text": "The packet is incomplete for a firm verdict: 10 of the 40 trigger points are omitted from block 3, one dnr-series point sits at a plate edge, and the packet cannot show whether the omitted points continue or break the pattern. Missing evidence includes the full point list and the blend and plate-image checks."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "e0d547ff51002ac2": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-064",
+       "E-031",
+       "E-032",
+       "E-033"
+      ],
+      "text": "The event's points come mostly from soft-rejected, standard-soft plates: 23 of 26 points are flagged STD_SOFT, so the lightcurve rests on a degraded measurement class rather than clean detections."
+     },
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-036"
+      ],
+      "text": "One of the event's points is flagged EMULSION_UNKNOWN, meaning its emulsion response is not characterized and the point could reflect an emulsion effect rather than a stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-023",
+       "E-033",
+       "E-034",
+       "E-039",
+       "E-052"
+      ],
+      "text": "The ee series has a median zero-point offset of -1.843 mag from only 3 plates, and many event points come from ee plates with offsets near -1.9, so a series-level calibration seam could produce the apparent dip."
+     },
+     {
+      "evidence_ids": [
+       "E-067",
+       "E-068"
+      ],
+      "text": "The lightcurve is not detrended and the star is flagged as a known variable, so a plate-to-plate or known periodic signal could account for the apparent outburst without requiring an artifact or a new event."
+     },
+     {
+      "evidence_ids": [
+       "E-066",
+       "E-067",
+       "E-002"
+      ],
+      "text": "The packet does not include the 1946 plate-level checks needed to rule out a seam or a missing point: no series overlap comparison and no detrended curve are provided, so an artifact explanation cannot be confirmed or excluded from this evidence alone."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  },
+  "fbb517bc07a8f24b": {
+   "argument": {
+    "claims": [
+     {
+      "evidence_ids": [
+       "E-058",
+       "E-042",
+       "E-043",
+       "E-044",
+       "E-046",
+       "E-048",
+       "E-052",
+       "E-054"
+      ],
+      "text": "Blend contamination is the most common flag in this trigger: 639 of 978 points carry the blend_suspect check, and the listed event points E-042, E-043, E-044, E-046, E-048, E-052 and E-054 are individually tagged BLEND_SUSPECT, so a neighbouring source could be contributing to the magnitudes."
+     },
+     {
+      "evidence_ids": [
+       "E-060",
+       "E-041",
+       "E-043",
+       "E-044",
+       "E-054"
+      ],
+      "text": "Many listed detections are shape outliers (E-041, E-043, E-044, E-054), and 283 of 978 points are flagged shape_outlier, so the dip or rise shape may reflect plate-specific noise rather than a coherent stellar change."
+     },
+     {
+      "evidence_ids": [
+       "E-053",
+       "E-061",
+       "E-056",
+       "E-057"
+      ],
+      "text": "The brightening-like offsets sit on plates with known edge or emulsion problems: E-053 carries PLATE_EDGE, 42 of 978 points are plate_edge flagged, and 58 points are emulsion_non_blue and 2 are emulsion_unknown, so emulsion response or plate edge effects are a plausible non-astrophysical origin."
+     },
+     {
+      "evidence_ids": [
+       "E-031",
+       "E-028",
+       "E-005",
+       "E-002"
+      ],
+      "text": "The event spans series 'i' and 'ma' and related series with different zero points: series ma has median offset 0.907 (E-031) and series i 0.822 (E-028), while the 1890 decade bin shows median 0.806 from only 36 points (E-005), so a seam between plate series or a zero-point mismatch could mimic a long-term change from 1890 to 1949."
+     },
+     {
+      "evidence_ids": [
+       "E-055",
+       "E-003",
+       "E-064",
+       "E-062"
+      ],
+      "text": "The packet is incomplete for ruling out artifacts: only 30 of 978 trigger points are listed (E-055), 15 more were thinned to fit the budget, and the event is a candidate with an l2_score of 1.0 that is only a ranking (E-003). The packet does not show whether the deeper-than-limit or plate-offset checks hold for the omitted points, so the artifact case cannot be fully closed from this evidence."
+     }
+    ],
+    "side": "artifact"
+   },
+   "failure": null,
+   "valid": true
+  }
+ }
+}

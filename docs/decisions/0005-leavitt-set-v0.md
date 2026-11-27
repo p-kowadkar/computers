@@ -1,6 +1,6 @@
 # 0005. Leavitt Set v0
 
-Date: 2026-11-26. Spec: `.kiro/specs/s2-leavitt-set-v0/`. Status: **built; the test split is waiting for your approval** (`computers bench freeze`).
+Date: 2026-11-26. Spec: `.kiro/specs/s2-leavitt-set-v0/`. Status: **built. The test split was frozen on 2026-11-27 at the owner's request** (`computers bench freeze`; lock file `docs/decisions/leavitt-test-split.lock.json`, test split sha256 `67758fff157a6ab5`: the Tabby tile, 1,058 stars, 3,382 plates dropped because a training tile also carries them).
 
 The set is built from the committed snapshot manifests with `computers bench build` and checked with `computers bench check`. The data card is `docs/data-cards/leavitt-v0.md`.
 
